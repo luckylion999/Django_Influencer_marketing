@@ -1,0 +1,59 @@
+{% extends 'new/base.html' %}
+{% load static %}
+
+{% block title %}Panel{% endblock %}
+
+{% block content %}
+<script>
+/**
+  Store global variables for home_buyer component
+*/
+var has_prev = '{{ prev }}';
+var sorter_params = '';
+</script>
+
+<ul class="nav nav-tabs" style="margin-top: 10px;">
+  <li class="active text-center" id="ig_tab">
+    <div class="x-tab x-tab-ig card-1">
+      <a data-toggle="tab" href="#ig-search-panel">
+        <span><i class="fa fa-instagram" aria-hidden="true"></i> Instagram</span>
+      </a>
+    </div>
+  </li>
+  <li class="text-center" id="twitter_tab">
+    <div class="x-tab x-tab-twitter card-1">
+      <a data-toggle="tab" href="#tw-search-panel">
+        <span><i class="fa fa-twitter" aria-hidden="true"></i> Twitter</span>
+      </a>
+    </div>
+  </li>
+</ul>
+
+<div id="searchPanel" class="panel">
+  <div class="tab-content" style="position: relative;">
+  
+    <div id="searchFormErrors" style="padding: 10px; text-align: center;"></div>
+
+    <div id="ig-search-panel" class="tab-pane fade in active" style="padding-left: 5px; padding-right: 5px; padding-top: 5px;">
+      
+      <form onkeypress="return event.keyCode != 13;">
+        {% include 'new/search_form_ig.html' %}
+      </form>
+    </div>
+    <div id="tw-search-panel" class="tab-pane fade" style="padding-left: 20px; padding-right: 20px; padding-top: 10px;">
+      <form onkeypress="return event.keyCode != 13;">
+          {% include 'new/search_form_tw.html' %}
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default no-padding translucent" id="accountsContainer">
+    <div id="accounts" class="panel-body translucent"></div>
+</div>
+
+{% endblock %}
+
+{% block additional_scripts %}
+<script src="{% static 'js/app.js' %}?v=1.0.0"></script>
+{% endblock %}

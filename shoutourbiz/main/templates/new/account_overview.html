@@ -1,0 +1,14 @@
+{% extends 'new/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <p><strong>Account Name: </strong>{{ username }}</p>
+        <p><strong>Network: </strong>{{ network_full }}</p>
+        <p><strong>Niches: </strong>{{ niches }}</p>
+        <p><strong>Price Per ShoutOut($US): </strong>{{ instance.price }}</p>
+        <p><strong>Note: </strong>{% if instance.note %}{{ instance.note }}{% else %}-{% endif %}</p>
+        <a class="btn btn-default" href="{% url 'main:edit_account' network model_id %}">Edit</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'new/base.html' %}
+
+{% block content %}
+<div class="text-center">
+    {% if request.user.is_month_buyer %}
+    You are subscribed!
+    {% else %}
+<a href="https://www.jvzoo.com/b/0/252335/1"><img src="http://i.jvzoo.com/0/252335/1" alt="Testtesttest" border="0" /></a>
+{% endif %}
+</div>
+    {% endblock %}

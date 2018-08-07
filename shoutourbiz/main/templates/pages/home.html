@@ -1,0 +1,52 @@
+{% extends 'new/base.html' %}
+
+{% block title %}
+ShoutOur.biz - Home
+{% endblock %}
+
+{% block header %}
+Home Page
+{% endblock %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Profile Overview
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <h4>Email: {{email}}</h4>
+                <h4>Your Niches:</h4>
+                <h5>- {{niches}}</h5>
+                <h4>Your Account(s):</h4>
+                <div class="row">
+    				<div class="col-lg-6">
+		                <ul><h4>Instagram: </h5>
+		                	{% if ig_accounts %}
+		                		{% for acc in ig_accounts %}<li><p><a href="/members/account_overview/?ac={{acc.id}}">{{acc.username}}</a><p></li>{% endfor %}
+		                	{% else %}
+		                		<p>None</p>
+		                	{% endif %}
+		                </ul>
+		            </div>
+		            <div class="col-lg-6">
+		                <ul><h4>Twitter: </h5>
+		                	{% if tw_accounts %}
+		                		{% for acc in tw_accounts %}<a href="/members/account_overview/?ac={{acc.id}}">{{acc.username}}</a><p></li>{% endfor %}
+		                	{% else %}
+		                		<p>None</p>
+		                	{% endif %}
+		                </ul>
+		            </div>
+		        </div>
+            </div>
+            <!-- .panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+</div>
+{% endblock %}

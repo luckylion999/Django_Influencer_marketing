@@ -1,0 +1,103 @@
+{% extends 'home_base.html' %}
+
+{% block title %}
+
+	<title>Search Result</title>
+
+{% endblock %}
+
+{% block header %}
+
+	<h2>Search Result</h2>
+
+{% endblock %}
+
+{% block body %}
+
+
+
+	<section id="Search" class="result">
+		<div class="container">				
+			{% if user.is_authenticated %}
+				<FORM><INPUT Type="button" VALUE="Back" onClick="history.back();return true;"></FORM>
+				<br>
+				<FORM><INPUT Type="button" VALUE="show" onClick="show()"></FORM>
+			    {% if not msg %}
+			    	{% if tags %}
+			    		<p>related tags: {% for tag in tags %}    <a href="{{tag.url}}">{{tag.t}}</a>{% endfor %}</p>
+			    	{% endif %}
+					{% if users %}
+				    	<p>Found {{ users|length }} user{{ users|pluralize }}.</p>
+					    <table id="searchTable" class="default">
+					    	<tr>
+					    		<th>username</th>
+					            <th>email</th>
+					            <th>follower count</th>
+					            <th>post count</th>
+					    		<th>frequency</th>
+					    	</tr>
+					        {% for u in users %}
+					        	{% if u.username in vis %}
+					        		<tr style="visibility:visible;">
+					    				<td>{{u.username}}</td>
+					           			<td style="visibility:visible;">{{u.info.email}}</td>
+					    				<td>{{u.info.followers}}</td>
+					            		<td>{{u.info.postcount}}</td>
+					    				<td>{{u.frequency}}</td>
+					    			</tr>
+					    		{% else %}
+							    	<tr>
+							    		<td>{{u.username}}</td>
+							            <td style="visibility:hidden;">{{u.info.email}}</td>
+							    		<td>{{u.info.followers}}</td>
+							            <td>{{u.info.postcount}}</td>
+							    		<td>{{u.frequency}}</td>
+							    	</tr>
+							    {% endif %}
+					        {% endfor %}
+					    </table>
+					{% else %}
+				    	<p>No user matched your search criteria.</p>
+					{% endif %}
+				{% else %}
+				<p>{{msg}}</p>
+				{% endif %}
+			{% else %}
+				<h1>please login first</h1>
+				<a href="http://shoutour.biz/members/login/">login</a>
+				<a href="http://shoutour.biz/members/register/">register</a>
+			{% endif %}
+		</div>
+	</section>
+    {% csrf_token %}
+	<script>
+		var show = (function (){
+			var num = 0;
+			var rows = document.getElementById("searchTable").rows;
+			$.ajaxSetup({
+  				data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+			});
+			return function(){
+				while(true){
+					num += 1;
+					if (num < rows.length){
+						if (rows[num].cells[1].style.visibility == 'visible'){
+							continue;
+						}
+						$.post("/members/show/", {username: rows[num].cells[0].innerHTML}, function(data, status){
+							if (data == 'True') {
+								rows[num].cells[1].style.visibility='visible';
+							}else{
+								alert("you have no more credit");
+							}
+						});
+					}else{
+						alert("no more user can be shown");
+					}
+					break;
+				}
+				
+			}
+		})();
+	</script>
+{% endblock %}

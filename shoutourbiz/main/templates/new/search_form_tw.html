@@ -1,0 +1,123 @@
+{% load widget_tweaks %}
+
+{% for err in tw_form.non_field_errors %}
+<div class="alert alert-danger">
+    {{ err }}
+</div>
+{% endfor %}
+
+{% for err in tw_form.search.errors %}
+<div class="alert alert-danger">
+    {{ err }}
+</div>
+{% endfor %}
+
+<div class="row" id="accountsSearchForm">
+
+    <!-- Niches filter -->
+    <div class="col-sm-3 col-lg-3">
+        <label id="nichesLabel" for="{{ field.id_for_label }}">{{ tw_form.tw_niches.label }}</label>
+        <div class="form-group">
+            {% render_field tw_form.tw_niches class="form-control niches_tags_input tw_form_niches" %}
+        </div>
+    </div>
+
+    <!-- Follower filter -->
+    <div class="col-sm-2 col-lg-2">
+        <div class="row filters_row">
+            <label id="filtersLabel" class="padding-left-15 padding-right-15">Filters</label>
+        </div>
+
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" id="tw_followers_collapse_title" style="display: inline;">
+                        <a class="filter_link accordion-toggle collapsed" data-toggle="collapse" href="#tw_followers_filter_panel">
+                            Followers
+                        </a>
+                    </h4>
+                </div>
+                <div id="tw_followers_filter_panel" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="row padding-sides">
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}" class="sub-label">{{ tw_form.tw_min_followers.label }}</label>
+                                {% render_field tw_form.tw_min_followers class+="form-control tw_form_min_followers" %}
+                            </div>
+                        </div>
+                        <div class="row padding-sides">
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}" class="sub-label">{{ tw_form.tw_max_followers.label }}</label>
+                                {% render_field tw_form.tw_max_followers class+="form-control tw_form_max_followers" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CPM filter -->
+    <div class="col-sm-2 col-lg-2">
+
+        <div class="row empty_row">
+            <label class="padding-left-15 padding-right-15">&ensp;</label>
+        </div>
+
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" id="tw_cpm_collapse_title" style="display: inline;">
+                        <a class="filter_link accordion-toggle collapsed" data-toggle="collapse" href="#tw_cpm_filter_panel">
+                            CPM  
+                        </a>
+                    </h4>
+                </div>
+                <div id="tw_cpm_filter_panel" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="row padding-sides">
+                            <label for="{{ field.id_for_label }}" class="sub-label">Min CPM</label>
+                            <div class="input-group">
+                                {% render_field tw_form.tw_min_cpm class="form-control tw_form_min_cpm" %}
+                            </div>
+                        </div>
+                        <div class="row padding-sides">
+                            <label for="{{ field.id_for_label }}" class="sub-label">Max CPM</label>
+                            <div class="input-group" class="sub-label">
+                                {% render_field tw_form.tw_max_cpm class="form-control tw_form_max_cpm" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- verified checkbox -->
+    <div class="col-sm-2">
+        <div class="row empty_row">
+            <label class="padding-left-15 padding-right-15">&ensp;</label>
+        </div>
+        <div class="row">
+            <div class="checkbox-inline" id="tw-checkbox-container">
+                <label class="checkbox-inline">
+                    <input type="checkbox" value="" id="tw-checkbox" checked>&ensp;Include unconfirmed 
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="Includes influencers who have not yet confirmed their price for a shout out. The CPM metric is not available for these influencers."><i class="fa fa-question" aria-hidden="true"></i>
+                    </a>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- search button -->
+    <div class="col-sm-1">
+
+        <div class="row">
+            <label class="padding-left-15 padding-right-15">&ensp;</label>
+        </div>
+        
+        <button data-url="{% url 'main:accounts_page' 'tw' %}?page=1" class="search-btn btn btn-primary" value="Search" data-network="tw" id="twSearchBtn"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
+
+    </div>
+
+</div>

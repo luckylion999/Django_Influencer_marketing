@@ -1,0 +1,145 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <title>{% block title %}{% endblock %} - ShoutOurBiz</title>
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'internal/html/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Menu CSS -->
+    <link href="{% static 'internal/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css' %}" rel="stylesheet">
+    <!-- animation CSS -->
+    <link href="{% static 'internal/html/css/animate.css' %}" rel="stylesheet">
+    <!-- Global CSS -->
+    <link href="{% static 'internal/html/css/style.css' %}" rel="stylesheet">
+    <!-- color CSS -->
+    <link href="{% static 'internal/html/css/colors/default.css' %}" id="theme" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'internal/html/css/custom.css' %}" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="{% static 'internal/plugins/bower_components/jquery/dist/jquery.min.js' %}"></script>
+
+</head>
+
+<body class="fix-header">
+
+    <!-- ============================================================== -->
+    <!-- Preloader -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+        </svg>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- Wrapper -->
+    <!-- ============================================================== -->
+    <div id="wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <nav class="navbar navbar-default navbar-static-top m-b-0">
+            <div class="navbar-header">
+                <div class="top-left-part">
+                    <!-- Logo -->
+                    <a class="logo" href="{% url 'main:home' %}">
+                        <b>
+                        <img src="{% static 'internal/plugins/images/admin-logo-dark.png' %}" alt="home" class="light-logo" />
+                     </b>
+                        <span class="hidden-xs">
+                        <img src="{% static 'internal/plugins/images/admin-text-dark.png' %}" alt="home" class="light-logo" />
+                     </span> </a>
+                </div>
+                <!-- /Logo -->
+
+                <ul class="nav navbar-top-links navbar-right pull-right">
+                    <li>
+                        <a class="profile-pic" href="{% url 'internal:profile' %}"> 
+                            <img src="{% static 'internal/plugins/images/users/assistant.png' %}" width="36" class="img-circle">
+                            <b class="hidden-xs">
+                                {% block username %}{% endblock %}
+                            </b>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-header -->
+            <!-- /.navbar-top-links -->
+            <!-- /.navbar-static-side -->
+        </nav>
+        <!-- End Top Navigation -->
+
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - styles can be found in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <div class="navbar-default sidebar" role="navigation" style="top: 70px !important;">
+            <div class="sidebar-nav slimscrollsidebar">
+                <div class="sidebar-head">
+                    <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Navigation</span></h3>
+                </div>
+                <ul class="nav" id="side-menu">
+                    <li class="active">
+                        <a href="{% url 'internal:profile' %}" class="waves-effect">
+                             <i class="fa fa-users fa-fw" aria-hidden="true"></i>
+                             Assistant Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'internal:dem' %}" class="waves-effect">
+                            <i class="fa fa-table fa-fw" aria-hidden="true"></i>
+                            Demographics Analyzer
+                        </a>
+                    </li>
+                </ul>
+                <div class="center p-20">
+                     <a href="{% url 'main:home' %}" class="btn btn-default btn-block waves-effect waves-light">Panel Home</a>
+                     <a href="{% url 'internal:logout' %}" class="btn btn-danger btn-block waves-effect waves-light">Logout</a>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- Page Content -->
+        <!-- ============================================================== -->
+        <div id="page-wrapper" data-ng-app="analyzerApp">
+            <div class="container-fluid">
+                {% block page_content %}{% endblock %}
+            </div>
+            <!-- /.container-fluid -->
+            <footer class="footer text-center"> 2017 &copy; ShoutOur.Biz </footer>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page Content -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'internal/html/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <!-- Menu Plugin JavaScript -->
+    <script src="{% static 'internal/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js' %}"></script>
+    <!--slimscroll JavaScript -->
+    <script src="{% static 'internal/html/js/jquery.slimscroll.js' %}"></script>
+    <!--Wave Effects -->
+    <script src="{% static 'internal/html/js/waves.js' %}"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static 'internal/html/js/custom.min.js' %}"></script>
+
+    {% block additional_scripts %}{% endblock %}
+</body>
+
+</html>

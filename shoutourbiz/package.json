@@ -1,0 +1,30 @@
+{
+  "name": "shoutourbiz",
+  "version": "1.0.0",
+  "description": "Influencer marketing platform",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-replace": "^0.5.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/serpclix/shoutourbiz.git"
+  },
+  "keywords": [
+    "marketing",
+    "influencer",
+    "social",
+    "network"
+  ],
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/serpclix/shoutourbiz#readme"
+}

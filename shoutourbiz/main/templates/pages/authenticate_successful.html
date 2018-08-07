@@ -1,0 +1,23 @@
+{% extends 'pages/home_base.html' %}
+
+{% block title %}
+ShoutOur.biz - Authentication Successful
+{% endblock %}
+
+{% block header %}
+Authentication Successful!
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="alert alert-info">
+            You will now return to the home page. (click <a href='/members/home/'>here</a> if nothing happens)
+        </div>
+    </div>
+</div>
+
+    <!--<script>-->
+        <!--setTimeout(function(){ window.location.replace("http://shoutour.biz/members/home/"); }, 3000);-->
+    <!--</script>-->
+{% endblock %}

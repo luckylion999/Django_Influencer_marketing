@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+  <head>
+    <meta charset="UTF-8">
+    <script src="{% static 'log_reg/js/log_reg.js' %}"></script>
+  {% block title %}
+  {% endblock %}
+
+    <link rel="stylesheet" href="{%static 'log_reg/css/style.css' %}">    
+  </head>
+
+  <body>
+
+<div id="login">
+  <div id="triangle"></div>
+
+  {% block header %}
+  {% endblock %}
+  
+  {% if message %}
+    <p id='msg' style="color:red">{{message}}</p>
+  {% else %}
+    <p id='msg' style="color:red"></p>
+  {% endif %}
+  {% block form %}
+  {% endblock %}
+
+</div>
+    
+  </body>
+</html>

@@ -1,0 +1,30 @@
+{% block title %}
+    <title>Register</title>
+{% endblock %}
+
+{% block header %}
+
+  <h1>Register</h1>
+  
+{% endblock %}
+
+{% block form %}
+
+<form id="reg_form" method="post" action="/members/register/">
+  {% csrf_token %}
+  {% if em %}
+    Email:<input id='email' type="email" name="email" value={{em}} requied/><br>
+  {% else %}
+    Email:<input id='email' type="email" name="email"requied/><br>
+  {% endif %}
+
+  Password:<input id='p1' type="password" name="password"required/><br>
+  Retype Your Password:<input id='p2' type="password" name="re_password"required/><br>
+  <input type="submit" value="Register"/>
+</form>
+
+{% endblock %}
+
+{% if message %}
+  <p id='msg' style="color:red">{{message}}</p>
+{% endif %}

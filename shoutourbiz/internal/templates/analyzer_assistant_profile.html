@@ -1,0 +1,188 @@
+{% extends 'analyzer_base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Internal - Assistant Profile{% endblock %}
+{% block username %}{{ user.email }}{% endblock %}
+
+
+{% block page_content %}
+<div class="row bg-title">
+    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+        <h4 class="page-title">Assistant Profile</h4> </div>
+    <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+        <a href="{% url 'internal:logout' %}" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light">Logout</a>
+        <ol class="breadcrumb">
+            <li>Home</li>
+            <li>Internal</li>
+            <li class="active">Assistant Profile</li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-4 col-xs-12">
+        <div class="white-box">
+            <div class="user-bg"> 
+
+                <div class="overlay-box" style="background-color: #2F323E;">
+                    <div class="user-content">
+                        <img src="{% static 'internal/plugins/images/users/assistant.png' %}" class="thumb-lg img-circle" />
+
+                        <h4 class="text-white">{{ user.first_name }}&ensp;{{ user.last_name }}</h4>
+                        <h5 class="text-white">{{ user.email }}</h5> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 col-xs-12">
+        <div class="white-box">
+            <form class="form-horizontal form-material">
+
+                <h3>Account</h3> <br/>
+                {% if not user.is_superuser %}
+                <div class="form-group">
+                    <label class="col-md-12">First Name</label>
+                    <div class="col-md-12">
+                        <input type="text" class="form-control form-control-line" value="{{ user.first_name }}" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-12">Last Name</label>
+                    <div class="col-md-12">
+                        <input type="text" class="form-control form-control-line" value="{{ user.last_name }}" readonly>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <label for="example-email" class="col-md-12">Email</label>
+                    <div class="col-md-12">
+                        <input type="email" class="form-control form-control-line" value="{{ user.email }}" readonly> </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-xs-12">
+    </div>
+
+    <div class="col-md-8 col-xs-12">
+        <div class="white-box">
+            
+            {% if user.is_superuser %}
+            <div class="row pull-right" style="font-size: 13px;">
+                <a href="{% url 'internal:retrieve_influencers_already_analyzed' %}">
+                    <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                    Download influencers report
+                </a>
+                <a href="javascript:void(0)" data-toggle="tooltip" title="This report will display which influencers have been analyzed, and how many followers were analyzed by assistants for each influencer."><i class="fa fa-question" aria-hidden="true"></i>
+                </a>
+            </div>
+            {% endif %}
+
+            <h3>Assistant Statistics</h3>
+
+            <br/>
+            <h4>Total profiles evaluated (past 2 months): {{num_ratings}}<h4>
+            <br/>
+
+            <div class="panel-group" id="accordion">
+
+                {% if user.is_superuser %}
+
+                    {% for month in all_assistants_stats %}
+                        {% if month %}
+                            <h3>{{month.month_str}} ({{month.year}}):</h3>
+                            <h5>{{month.month_count}} profiles evaluated this month.</h5>
+
+                            {% for assistant in month.data %}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                      <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#assistant_panel_{{assistant.id}}">
+                                            <span>
+                                                <i class="fa fa-instagram" aria-hidden="true"></i>
+                                            </span>&ensp;
+                                            {{ assistant.assistant_info.first_name }} {{ assistant.assistant_info.last_name }} ({{assistant.assistant_info.email}})
+                                        </a>
+                                      </h4>
+                                    </div>
+                                    <div id="assistant_panel_{{assistant.id}}" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="panel-stats">
+                                                Number of profiles evaluated: {{ assistant.count }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+
+                    {% for rating in stats %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                              <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#assistant_panel_{{rating.id}}">
+                                    <span>
+                                        <i class="fa fa-instagram" aria-hidden="true"></i>
+                                    </span>&ensp;
+                                    {{ rating.ig_follower.username }}
+                                </a>
+                              </h4>
+                            </div>
+                            <div id="assistant_panel_{{rating.id}}" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="panel-stats">
+                                        <i class="fa fa-venus-mars" aria-hidden="true"></i> <h4>Gender:</h4> <span>{{ rating.gender }}</span> <br/>
+                                        <i class="fa fa-users" aria-hidden="true"></i> <h4>Age group:</h4> <span>{{ rating.age_group }}</span><br/>
+                                        <i class="fa fa-globe" aria-hidden="true"></i> <h4>Country:</h4> 
+                                        <span>
+                                        {% if rating.country == '' %}
+                                            Unknown
+                                        {% else %}
+                                            {{ rating.country.name }} ( {{ rating.country }} )
+                                        {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <!-- pagination -->
+                    {% if stats.has_other_pages %}
+                        <ul class="pagination">
+                            {% if stats.has_previous %}
+                                <li><a href="?page={{ stats.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&laquo;</span></li>
+                            {% endif %}
+                            
+                            {% for i in stats.paginator.page_range %}
+                                {% if stats.number == i %}
+                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if stats.has_next %}
+                                <li><a href="?page={{ stats.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+
+
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

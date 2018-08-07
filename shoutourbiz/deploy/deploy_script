@@ -1,0 +1,41 @@
+#/bin/bash
+
+echo Activating virtual environment...
+
+# Activate virtualenv
+source /home/shoutourbiz/shoutourbiz_site/new_env/bin/activate
+
+echo Installing requirements...
+
+cd /home/shoutourbiz/shoutourbiz_site/project/shoutourbiz
+
+# Pull master branch
+echo Pulling from git...
+git pull origin master
+
+# Collect static files
+echo Collecting static files ...
+/home/shoutourbiz/shoutourbiz_site/new_env/bin/python /home/shoutourbiz/shoutourbiz_site/project/shoutourbiz/manage.py collectstatic --noinput
+
+# Install pip packages
+echo installing pip packages...
+pip install -r requirements.txt
+
+# Migrate
+python manage.py migrate
+
+# Restart gunicorn
+echo restarting gunicorn ...
+service gunicorn restart
+
+# Restart nginx
+echo restarting nginx ...
+service nginx restart
+
+# Change file permissions for logs
+cd /home/shoutourbiz/shoutourbiz_site/project/
+chown -R shoutourbiz:www-data logs/*
+
+# Change file permissions for collected static files
+cd shoutourbiz/
+chown -R shoutourbiz:www-data static/* 

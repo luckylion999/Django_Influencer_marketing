@@ -1,0 +1,35 @@
+{% extends 'new/base.html' %}
+
+{% block title %}
+ShoutOur.biz - Home
+{% endblock %}
+
+{% block header %}
+Search
+{% endblock %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-lg-3">
+    <form role="form" method="get" action="{% url 'main:search_shoutouts' %}">
+            <fieldset>
+                <div class="form-group">
+                	<label>Keyword</label>
+                    <input id='keyword' class="form-control" type="text" name="kw" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label>Network</label>
+                    <select id='network' class="form-control" name='n' />
+                        <option value="ig">Instagram</option>
+                        <option value="tw">Twitter</option>
+                    </select>
+                </div>
+                <!-- Change this to a button or input when using this as a form -->
+                <input class="btn btn-primary" type="submit" value="Search"/>
+            </fieldset>
+        </form>
+    </div>
+</div>
+{% endblock %}

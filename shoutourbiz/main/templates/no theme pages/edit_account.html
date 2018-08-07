@@ -1,0 +1,50 @@
+{% load static %}
+<script src="{% static 'home_static/js/jquery.min.js' %}"></script>
+
+{% block title %}
+
+	<title>Edit Account</title>
+
+{% endblock %}
+
+{% block header %}
+
+	<h2>Edit Account</h2>
+
+{% endblock %}
+
+{% block body %}
+
+	{% if fail %}
+	<div id='msg' style='color:red'>{{msg}}</div>
+	<input type=button onClick="parent.location='/members/home/'" value='back'>
+	{% else %}
+
+		<form id="add_acc_form" method="post" action="/members/edit_account/">
+	  {% csrf_token %}
+
+	    <div id='account_header'>Accout Name: {{account}}</div><br>
+	    <div id='network_header'>Network: {{network}}</div><br>
+	    
+		<div id='ni'>Niches:<input id='niches' type="text" name="niches" value='{{niches}}'/> (if you have multiple, seperate each with a comma)<br></div>
+
+		<div id='price_heading'>Price Per ShoutOut($US):<input id='price' type="text" name="price" value='{{price}}' requied/><br></div>
+
+	  <input id='submit' type="submit" value="Save"/>
+	  <input type=button onClick="parent.location='/members/account_overview/?ac={{ac}}'" value='back'>
+	{% if msg %}
+	<div id='msg' style='color:red'>{{msg}}</div>
+	{% endif %}
+
+	<input id='ac' type="text" name="ac" value='{{ac}}' style="visibility:hidden"/>
+	<input id='network' type="text" name="network" value='{{network}}' style="visibility:hidden"/>
+	<input id='account' type="text" name="account" value='{{account}}' style="visibility:hidden"/>
+	  </form>
+	{% endif %}
+
+
+
+
+
+
+{% endblock %}

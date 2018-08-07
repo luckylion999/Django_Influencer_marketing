@@ -1,0 +1,37 @@
+{% load static %}
+<script src="{% static 'home_static/js/jquery.min.js' %}"></script>
+
+{% block title %}
+
+	<title>Account Overview</title>
+
+{% endblock %}
+
+{% block header %}
+
+	<h2>Account Overview</h2>
+
+{% endblock %}
+
+{% block body %}
+
+	{% if fail %}
+	<div id='msg' style='color:red'>{{msg}}</div>
+	<input type=button onClick="parent.location='/members/home/'" value='back'>
+	{% else %}
+
+	    <div id='username'>Accout Name: {{account}}</div><br>
+	    <div id='network'>Network: {{network}}</div><br>
+	    <div id='niches'>Niches: {{niches}}</div><br>
+	    <div id='price'>Price Per ShoutOut($US): {{price}}</div><br>
+	    <input type=button onClick="parent.location='/members/home/'" value='back'>
+	    <input type=button onClick="parent.location='/members/edit_account/?ac={{ac}}'" value='Edit Account'>
+		{% if msg %}
+		<div id='msg' style='color:red'>{{msg}}</div>
+		{% endif %}
+	{% endif %}
+
+
+
+
+{% endblock %}

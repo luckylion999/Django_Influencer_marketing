@@ -1,0 +1,516 @@
+{% extends 'new/base.html' %}
+
+{% load static %}
+{% load shoutourbiz_tags %}
+{% load humanize %}
+
+{% block title %}Profile Details{% endblock %}
+
+{% block additional_styles %}
+<link href="{% static 'css/c3.css' %}" rel="stylesheet">
+<link href="{% static 'css/profiles_page.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="container-fluid">
+		<div class="button_row card-1">
+			{% if has_previous %}
+			<a class="btn btn-default pull-left" id="backBtn" href="{% url 'main:home' %}?prev=profiles">
+				<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>&ensp;Back
+			</a>
+			{% endif %}
+
+			<div class="full-width right-row">
+				{% if request.user.is_superuser or is_assistant %}
+					{% if ig_user %}
+	                <a class="btn btn-warning" href="{% url 'internal:assistant_edit_influencer' network='ig' uid=ig_user.id %}?username={{ ig_user.username }}&verified={{is_verified}}" target="_blank">
+	                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&ensp;Edit Instagram
+	                </a>
+	                {% endif %}
+	                {% if tw_user %}
+	                <a class="btn btn-warning" href="{% url 'internal:assistant_edit_influencer' network='tw' uid=tw_user.id %}?username={{ tw_user.username }}&verified={{is_verified}}" target="_blank">
+	                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&ensp;Edit Twitter
+	                </a>
+	                {% endif %}
+	            {% elif not request.user.is_authenticated %}
+
+                {% else %}
+                    {% if not is_credit_user %}
+                        {% if not out_of_credits %}
+                            {% if ig_user %}
+                                <a href="{% url 'profiles:unlock_influencer' network='ig' uid=ig_user.id %}?prev=home"><button class="btn btn-default"><i class="fa fa-unlock-alt" aria-hidden="true"></i> Unlock</button></a>
+                            {% endif %}
+                            {% if tw_user %}
+                                <a href="{% url 'profiles:unlock_influencer' network='tw' uid=tw_user.id %}?prev=home"><button class="btn btn-default"><i class="fa fa-unlock-alt" aria-hidden="true"></i> Unlock</button></a>
+                            {% endif %}
+                        {% else %}
+                            {% if ig_user %}
+                                <a href="#"><button class="btn btn-default disabled"><i class="fa fa-unlock-alt" aria-hidden="true"></i> Unlock</button></a>
+                            {% endif %}
+                            {% if tw_user %}
+                                <a href="#"><button class="btn btn-default disabled"><i class="fa fa-unlock-alt" aria-hidden="true"></i> Unlock</button></a>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        {% if ig_user %}
+                            <a href="#"><button class="btn btn-default disabled"><i class="fa fa-unlock-alt" aria-hidden="true"></i> Unlock</button></a>
+                        {% endif %}
+                        {% if tw_user %}
+                            <a href="#"><button class="btn btn-default disabled"><i class="fa fa-unlock-alt" aria-hidden="true"></i> Unlock</button></a>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+				<button class="btn btn-default disabled"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add to list</button>
+				<button class="btn btn-default disabled"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+		 Export to PDF</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row profiles-page">
+
+<div class="col-md-4 col-sm-4">
+	<div class="panel panel-default">
+		{% if ig_user %}
+			{% if is_credit_user or request.user.is_superuser or is_assistant or request.user.is_authenticated and ig_user.verified_acc in request.user.opened_accounts.all %}
+				<div class="user-bg-logged-in">
+			{% else %}
+				<div class="user-bg-logged-in">
+			{% endif %}
+
+			<div class="user_img_container">
+				<img class="user_img" src=""></img>
+			</div>
+
+		{% else %}
+			<div class="user-bg-logged-in">
+		{% endif %}
+
+			{% if ig_user %}
+            <div class="overlay-box">
+            {% elif tw_user %}
+            <div class="overlay-box-no-cover">
+            {% endif %}
+                <div class="user-content">
+                    <h4>
+                    	{% if ig_user %}
+	                    	{% if is_credit_user or request.user.is_superuser or is_assistant or request.user.is_authenticated and ig_user.verified_acc in request.user.opened_accounts.all %}
+	                    		<span class="text-white">{{ ig_user.username }}
+	                    		{% if ig_verified_acc %}
+	                    			&ensp;
+		                    		<a class="tooltip-link" href="javascript:void(0)" data-toggle="tooltip" title="This influencer has confirmed their account with us.">
+										<i class="fa fa-check-circle" aria-hidden="true" style="color: #77dd77"></i>
+									</a>
+								{% endif %}
+	                    	{% else %}
+	                    		<span class="transbox text-white">{{ randomized_username }}</span>
+	                    		{% if ig_verified_acc %}
+	                    			&ensp;
+		                    		<a class="tooltip-link" href="javascript:void(0)" data-toggle="tooltip" title="This influencer has confirmed their account with us.">
+										<i class="fa fa-check-circle" aria-hidden="true" style="color: #77dd77"></i>
+									</a>
+								{% endif %}
+	                    	{% endif %}
+	                    {% else %}
+	                    	{% if is_credit_user or request.user.is_superuser or is_assistant or request.user.is_authenticated and tw_user.verified_acc in request.user.opened_accounts.all %}
+	                    		<span class="text-white">{{ tw_user.username }}
+	                    		{% if tw_verified_acc %}
+	                    			&ensp;
+		                    		<a class="tooltip-link" href="javascript:void(0)" data-toggle="tooltip" title="This user has confirmed their account with us.">
+										<i class="fa fa-check-circle" aria-hidden="true" style="color: #77dd77"></i>
+									</a>
+								{% endif %}
+	                    	{% else %}
+	                    		<span class="transbox">{{ randomized_username }} 
+	                    	{% endif %}
+	                    {% endif %}
+                    	</span>
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <div class="user-info">
+        	<div class="bio">
+        		{% if ig_user %}
+	        		{% if is_credit_user or request.user.is_superuser or is_assistant or request.user.is_authenticated and ig_user.verified_acc in request.user.opened_accounts.all %}
+	            		<span>{{ ig_user.username }}
+	            	{% else %}
+	            		<span class="transbox">{{ randomized_username }}
+	            	{% endif %}
+	            	</span>
+	            {% else %}
+	            	{% if is_credit_user or request.user.is_superuser or is_assistant or request.user.is_authenticated and tw_user.verified_acc in request.user.opened_accounts.all %}
+	            		<span>{{ tw_user.username }}
+	            	{% else %}
+	            		<span class="transbox">{{ randomized_username }}
+	            	{% endif %}
+	            	</span>
+	            {% endif %}
+
+                 has {% if ig_user and tw_user %}both Instagram and Twitter{% elif ig_user %}an Instagram account{% elif tw_user %}a Twitter account{% endif %}.
+
+                 <br/><br/>
+
+                 <div class="row">
+	                 <div class="col-sm-4" style="text-align: center;">
+	                 	<span class="left-col">
+	                 		<i class="fa fa-envelope-o" aria-hidden="true"></i>&ensp;Email:&ensp;
+	                 	</span>
+	                 </div>
+	                 <div class="col-sm-6">
+	                 	<span class="right-col">
+		                 	{% if ig_user %}
+		                 		{% if is_credit_user or request.user.is_superuser or request.user.is_authenticated and ig_user.verified_acc in request.user.opened_accounts.all %}
+		                 			{{ig_user.email}}
+		                 		{% else %}
+		                 			<span class="transbox">{{ randomized_email }}
+		                 		{% endif %}
+		                 	{% else %}
+		                 		{% if is_credit_user or request.user.is_superuser or request.user.is_authenticated and tw_user.verified_acc in request.user.opened_accounts.all %}
+		                 			{{tw_user.email}}
+		                 		{% else %}
+		                 			<span class="transbox">{{ randomized_email }}
+		                 		{% endif %}
+		                 	{% endif %}
+		                 </span>
+	                 </div>
+	            </div>
+	            {% if ig_user %}
+	            <div class="row">
+	            	<div class="col-sm-4" style="text-align: center;">
+	                 	<span class="left-col">
+	                 		<i class="fa fa-instagram" aria-hidden="true"></i>&ensp;CPM:&ensp;
+	                 	</span>
+	                 </div>
+	                 <div class="col-sm-6">
+	                 	<span class="right-col">
+							{% if ig_cpm %}
+								{{ ig_cpm|floatformat:2|intcomma }}
+							{% else %}
+								Not available
+							{% endif %}
+	                 	</span>
+	                 </div>
+	            </div>
+		        {% endif %}
+		        {% if tw_user %}
+		        <div class="row">
+	            	<div class="col-sm-4" style="text-align: center;">
+	                 	<span class="left-col">
+	                 		<i class="fa fa-twitter" aria-hidden="true"></i>&ensp;CPM:&ensp;
+	                 	</span>
+					</div>
+					<div class="col-sm-6">
+						<span class="right-col">
+							{% if tw_cpm %}
+								{{ tw_cpm|floatformat:2|intcomma }}
+							{% else %}
+								Not available
+							{% endif %}
+						</span>
+					</div>
+	            </div>
+		        {% endif %}
+
+
+        	</div>
+
+        	{% if ig_user %}
+        	<div class="container-fluid">
+	        	<div class="row">
+	        		<div class="social-media-bar instagram">
+		        		<div class="col-xs-2 logo">
+		        			{% if is_credit_user or request.user.is_superuser or is_assistant or request.user.is_authenticated and ig_user.verified_acc in request.user.opened_accounts.all %}
+							<a href="https://instagram.com/{{ ig_user.username }}/" target="_blank">
+							{% else %}
+							<a>
+							{% endif %}
+		        				<i class="fa fa-instagram" aria-hidden="true" style="margin-top: 8px;"></i>
+							</a>
+		        		</div>
+		        		{% if ig_user.followers %}
+		        		<div class="col-xs-3 followers">
+		        			<div class="stats_top">
+		        				{{ ig_user.followers|intcomma }}
+		        			</div>
+		        			<div class="stats_bottom">
+		        				Followers
+		        			</div>
+		        		</div>
+		        		{% endif %}
+		        		{% if ig_user.postavglike %}
+		        		<div class="col-xs-4 likes">
+		        			<div class="stats_top">
+		        				{{ ig_user.postavglike|intcomma }}
+		        			</div>
+		        			<div class="stats_bottom">
+		        				Avg likes
+		        			</div>
+		        		</div>
+		        		{% endif %}
+		        		{% if ig_user.postcount %}
+		        		<div class="col-xs-3 post_count">
+		        			<div class="stats_top">
+		        				{{ ig_user.postcount|intcomma }}
+		        			</div>
+		        			<div class="stats_bottom">
+		        				Posts
+		        			</div>
+		        		</div>
+		        		{% endif %}
+		        	</div>
+		        </div>
+	        </div>
+	        {% endif %}
+
+	        {% if tw_user %}
+	        <div class="container-fluid">
+		        <div class="row">
+		        	<div class="social-media-bar twitter">
+		        		<div class="col-xs-2">
+		        			<div class="logo">
+		        				<i class="fa fa-twitter" aria-hidden="true" style="margin-top: 8px;"></i>
+		        			</div>
+		        		</div>
+		        		<div class="col-xs-3 followers">
+		        			<div class="stats_top">
+		        				{{ tw_user.followers|intcomma }}
+		        			</div>
+		        			<div class="stats_bottom">
+		        				Followers
+		        			</div>
+		        		</div>
+		        		<div class="col-xs-4 likes">
+		        			<div class="stats_top">
+		        				{{ tw_user.avgfav|intcomma }}
+		        			</div>
+		        			<div class="stats_bottom">
+		        				Avg likes
+		        			</div>
+		        		</div>
+		        		<div class="col-xs-3 post_count">
+		        			<div class="stats_top">
+		        				{{ tw_user.statusescount|intcomma }}
+		        			</div>
+		        			<div class="stats_bottom">
+		        				Statuses
+		        			</div>
+		        		</div>
+		        	</div>
+	        	</div>
+        	</div>
+        	{% endif %}
+        </div>
+	</div>
+
+	{% if ig_verified_acc or tw_verified_acc %}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4>Price</h4>
+		</div>
+		<div class="panel-body">
+			{% if ig_verified_acc %}
+				<span class="user-bio-price">
+					<i class="fa fa-instagram" aria-hidden="true"></i>&ensp;${{ ig_verified_acc.price|intcomma }}<br/>
+				</span>
+			{% endif %}
+			{% if tw_verified_acc %}
+				<span class="user-bio-price">
+					<i class="fa fa-twitter" aria-hidden="true"></i>&ensp;${{ tw_verified_acc.price|intcomma }}
+				</span>
+			{% endif %}
+		</div>
+	</div>
+	{% endif %}
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4>Niches</h4>
+		</div>
+		<div class="panel-body">
+			<div class="container-fluid">
+				<div class="row">
+					
+					<div id="niches_container">
+
+					{% if ig_user %}
+						{% if ig_niches|length > 0 %}
+							
+							<div class="col-xs-12" style="margin-bottom: 5px;">
+								<h4 class="subtitle" style="display: inline;">Instagram</h4>
+					        </div>
+
+					       	<div style="margin-left: 5px">
+								{% for niche in ig_niches %}
+								<span class="badge" style="padding-left: 8px; padding-right: 8px; padding-top: 3px; padding-bottom: 3px; margin: 3px; font-size: 13px;">
+										{% if ig_verified_acc %}
+											{{ niche.niche|lower }}
+										{% else %}
+											{{ niche.hashtag|lower }}
+										{% endif %}
+								</span>
+								{% endfor %}
+							</div>
+
+						{% else %}
+							<div class="col-xs-12" style="margin-bottom: 20px;">Instagram niches not available for this user</div>
+						{% endif %}
+					{% endif %}
+
+					{% if tw_user %}
+						{% if tw_niches|length > 0 %}
+							{% if ig_user %}
+								<br/>
+							{% endif %}
+
+							<div class="col-xs-12">
+								<h4 class="subtitle" style="display: inline;">Twitter</h4>
+					        </div>
+							{% for niche in tw_niches %}
+							<span class="badge" style="padding-left: 8px; padding-right: 8px; padding-top: 3px; padding-bottom: 3px; margin: 3px; font-size: 13px;">
+								{% if tw_verified_acc %}
+									{{ niche.niche|lower }}
+								{% else %}
+									{{ niche.keyword|lower }}
+								{% endif %}
+							</span>
+							{% endfor %}
+						{% else %}
+							<div class="col-xs-12">Twitter niches not available for this user</div>
+						{% endif %}
+					{% endif %}
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="col-md-8 col-sm-8 charts-col">
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<span class="inline" id="audienceStatisticsSpinner"></span> <h4>Audience statistics</h4>
+		</div>
+		<div class="panel-body" id="topPanelContainer">
+			<div class="container-fluid" id="topPanel">
+				<div class="row chart-row">
+					<div class="col-md-6 chart-col">
+						<div class="chart_title">
+						</div>
+						<div id="age_group_chart"></div>
+					</div>
+					<div class="col-md-6 chart-col">
+						<div class="chart_title">
+						</div>
+						<div id="gender_chart"></div>
+					</div>
+				</div>
+				<div class="row" style="margin-top: 15px;">
+					<div class="col-md-6 chart-col" id="engagement_chart_col">
+						<div class="chart_title"></div>
+						<div id="engagement_chart"></div>
+					</div>
+					<div class="col-md-6 chart-col">
+						<div class="chart_title"></div>
+						<div id="followers_trend_chart"></div>
+					</div>
+				</div>
+			</div>
+			<span class="mssg"></span>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<span class="inline" id="geographicDistributionSpinner"></span> <h4 class="panel-heading-title">Audience geographic distribution</h4>&ensp;
+			<a class="tooltip-link" href="javascript:void(0)" data-toggle="tooltip" title="Displays which countries this influencer's audience comes from.">
+				<i class="fa fa-question-circle" aria-hidden="true"></i>
+			</a>
+		</div>
+		<div class="panel-body">
+			<div class="container-fluid" id="middlePanelContainer">
+				<div class="row chart-row" id="middlePanel">
+					<div id="world_map" style="height: 100%; width: 100%;"></div>
+				</div>
+				<span class="mssg"></span>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<span class="inline" id="interestSpinner"></span> 			
+			<h4 class="panel-heading-title">
+				Interest over time
+			</h4>&ensp;
+			<a class="tooltip-link" href="javascript:void(0)" data-toggle="tooltip" title="Displays the volume of searches for the influencer and the influencer's interests.">
+				<i class="fa fa-question-circle" aria-hidden="true"></i>
+			</a>
+		</div>
+		<div class="panel-body">
+			<div class="container-fluid" id="bottomPanelContainer">
+				<div class="row" id="bottomPanel">
+					<div id="trends_chart"></div>
+				</div>
+				<span class="mssg"></span>
+			</div>
+		</div>
+	</div>
+</div>
+
+</div> <!-- end row -->
+
+{% if request.user.is_authenticated %}
+<script>
+var is_logged_in = true;
+</script>
+{% else %}
+<script>
+var is_logged_in = false;
+</script>
+{% endif %}
+
+{% if ig_user %}
+<script>
+var age_group_url = "{% url 'profiles:age_group_chart' ig_user.id %}";
+var gender_url = "{% url 'profiles:gender_chart' ig_user.id %}";
+var engagement_url = "{% url 'profiles:engagement_chart' ig_user.id %}";
+var country_url = "{% url 'profiles:country_chart' ig_user.id %}";
+var ig_trends_url = "{% url 'profiles:trends_chart' network="ig" uid=ig_user.id %}";
+var profile_pic_url = "{% url 'profiles:ig_profile_pic' uid=ig_user.id %}";
+var followers_trend_url = "{% url 'profiles:followers_trend_chart' ig_user.id %}"
+var tw_trends_url = null;
+</script>
+{% endif %}
+
+{% if tw_user %}
+<script>
+var tw_trends_url = "{% url 'profiles:trends_chart' network="tw" uid=tw_user.id %}";
+var ig_trends_url = null;
+</script>
+{% endif %}
+
+<script>
+{% if network == 'ig' %}
+var niches = '{{ ig_niches|get_niches_arr_top_5:network }}';
+{% elif network == 'tw' %}
+var niches = '{{ tw_niches|get_niches_arr_top_5:network }}';
+{% endif %}
+
+var uid = '{{ ig_user.id }}';
+var preloader_path = "{% static 'img/preloader.gif' %}";
+var anon_profile_path = "{% static 'img/not_found.png' %}";
+var has_ig_account = '{{ ig_user|exists }}';
+</script>
+
+{% endblock %}
+
+{% block additional_scripts %}
+<script src="{% static 'js/d3.js' %}"></script>
+<script src="{% static 'js/c3.js' %}"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="{% static 'js/profiles_page.js' %}"></script>
+{% endblock %}

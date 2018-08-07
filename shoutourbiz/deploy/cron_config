@@ -1,0 +1,9 @@
+# This file contains all cron jobs that 
+# run on the production machine that are
+# relevant to the project
+
+# resets ig_follower table (every 30 minutes)
+0,30 * * * * /home/shoutourbiz/services/cron_reset_dem_analyzer > /home/shoutourbiz/shoutourbiz_site/project/logs/cron_console_output.log 2>&1
+
+# updates ig users info (the 2nd day of every month)
+0 0 2 * * /home/shoutourbiz/services/cron_update_ig_users > /home/shoutourbiz/project/logs/cron_console_output.log 2>&1

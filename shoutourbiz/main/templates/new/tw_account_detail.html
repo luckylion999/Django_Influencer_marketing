@@ -1,0 +1,116 @@
+{% load shoutourbiz_tags %}
+<div data-id="{{ obj.id }}" data-network="{{ obj.verified_acc.network }}" class="acc-detail">
+<div class="row top-buffer bot-buffer">
+    <div class="col-md-6">
+        <div class="top-small-buffer">
+        <div class="text-muted fix-width">
+            <span class="glyphicon glyphicon-user"></span> <strong>Screenname:</strong>
+        </div>
+            <div class="username-detail inline-div">
+                {% if acc_opened or request.user.is_superuser or is_assistant %}
+                    {{ obj.username }}
+                {% else %}
+                    {{ obj.username|starred }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="top-small-buffer">
+            <div class="text-muted fix-width">
+                <span class="glyphicon glyphicon-envelope"></span> <strong>Email:</strong>
+            </div>
+            <div class="email-detail inline-div">
+                {% if acc_opened or request.user.is_superuser or is_assistant %}
+                    {{ obj.verified_acc.email }}
+                {% else %}
+                    {{ obj.verified_acc.email|starred }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="top-small-buffer">
+            <div class="text-muted fix-width">
+                <span class="glyphicon glyphicon-usd"></span> <strong>Price:</strong>
+            </div>
+            <div class="inline-div">
+                {{ obj.verified_acc.price }}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="top-small-buffer">
+            <div class="text-muted fix-width">
+                <span class="glyphicon glyphicon-transfer"></span> <strong>Followers:</strong>
+            </div>
+            <div class="inline-div">
+                {{ obj.followers }}
+            </div>
+        </div>
+        <div class="top-small-buffer">
+            <div class="text-muted fix-width">
+                <span class="glyphicon glyphicon-comment"></span> <strong>Statuses:</strong>
+            </div>
+            <div class="inline-div">
+                {{ obj.statusescount }}
+            </div>
+        </div>
+        <div class="top-small-buffer">
+            <div class="text-muted fix-width">
+                <span class="glyphicon glyphicon-heart-empty"></span> <strong>Average Likes:</strong>
+            </div>
+            <div class="inline-div">
+                {{ obj.avgfav }}
+            </div>
+        </div>
+        <div class="top-small-buffer">
+            <div class="text-muted fix-width">
+                <span class="glyphicon glyphicon-heart"></span> <strong>Average Retweets:</strong>
+            </div>
+            <div class="inline-div">
+                {{ obj.avgretweet }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row bot-buffer">
+    <div class="col-md-12">
+    <div class="fix-width text-muted">
+        <strong>Niches:</strong>
+    </div>
+        <div class="inline-div">
+            {{ obj|get_niches }}
+        </div>
+    </div>
+</div>
+        {% if obj.verified_acc.note %}
+        <div class="row bot-buffer">
+            <div class="col-md-12">
+                <div class="fix-width text-muted">
+            <strong>Note:</strong>
+            </div>
+                <div class="inline-div">
+            {{ obj.verified_acc.note }}
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+
+    <div class="row bot-buffer">
+        <div class="col-md-12">
+            <button class="hide-btn btn btn-default">Hide</button>
+            {% if not acc_opened %}
+                {% if subscribed %}
+                    <button class="detail-btn btn btn-primary" data-remote="false" data-toggle="modal" data-target="#myModal">Open Hidden Fields</button>
+                {% else %}
+                    <a class="detail-btn btn btn-primary" href="{% url 'main:subscribe' %}">Open Hidden Fields</a>
+                {% endif %}
+            {% endif %}
+
+            {% if request.user.is_superuser or is_assistant %}
+                <a class="btn btn-warning pull-right edit_user_btn" href="{% url 'internal:assistant_edit_influencer' %}?email={{ obj.email }}&usr_id={{ obj.id }}&network=tw&username={{ obj.username }}" target="_blank">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&ensp;
+                    Edit influencer
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>

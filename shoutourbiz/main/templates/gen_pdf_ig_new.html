@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PDF GENERATION(IG)</title>
+</head>
+<body>
+  Invoice generation for Instagram
+  <form id="pdf_form" method="get" action="/members/gen_pdf_ig_new/">
+    Enter Hashtag Here: <input type="text" name="tag" required/> <br>
+    Enter Buyer Phone Number Here: <input type="text" name="phone"/> <br>
+    Enter Buyer Email Here: <input type="text" name="email"/> <br>
+    Enter Buyer Physical Address Here: <input type="text" name="addr"/> <br>
+    Enter Budget Here: $<input type="number" name="budget"/><br>
+<!--     Enter Email(s) Here (Optional): <input type="text" name="email"/> <br>
+    Note: If you want to have multiple email recipients, seperate each email with a semicolon, eg. ex1@mail.com;ex2@mail.com <br> -->
+    <input type="submit" value="Generate PDF"/>
+  </form>  
+  <p id='msg'>{{msg}}</p>
+</body>
+</html>

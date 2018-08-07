@@ -1,0 +1,52 @@
+{% extends 'new/base.html' %}
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="lead">Add new {{ network_full }} account</span>
+    </div>
+    <div class="panel-body">
+        <div class="row bot-margin">
+            <div class="col-md-2"><h4><strong>Username:</strong></h4></div>
+            <div class="col-md-10"><h4>{{ username }}</h4></div>
+        </div>
+        {% if niches %}
+        <div class="row bot-margin">
+            <div class="col-md-2"><h4><strong>Suggested Niches:</strong></h4></div>
+            <div class="col-md-10"><h4>{{ niches }}</h4></div>
+        </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-md-12">
+<form role="form" method="post" action="{% url 'main:new_account' network %}">
+                        {% csrf_token %}
+                            <fieldset>
+                                {% for err in form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {{ err }}
+                                </div>
+                                {% endfor %}
+                                {% for field in form %}
+                                {% if field.is_hidden %}
+                                {{ field }}
+                                {% else %}
+                                {% for err in field.errors %}
+                                <div class="alert alert-danger">
+                                    {{ err }}
+                                </div>
+                                {% endfor %}
+                                <div class="form-group">
+                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {{ field }}
+                                    <p class="text-muted">{{ field.help_text }}</p>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                                <!-- Change this to a button or input when using this as a form -->
+                                <input class="btn btn-default" type="submit" value="Register"/>
+                            </fieldset>
+                        </form>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

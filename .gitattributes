@@ -1,0 +1,3 @@
+shoutourbiz/manage.py merge=ours
+shoutourbiz/shoutourbiz/wsgi.py merge=ours
+shoutourbiz/shoutourbiz/celery.py merge=ours

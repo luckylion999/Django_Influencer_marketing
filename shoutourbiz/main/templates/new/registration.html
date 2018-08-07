@@ -1,0 +1,141 @@
+{% extends 'new/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}Sign up as {{ type|capfirst }}{% endblock %}
+
+{% block content %}
+<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+    <div class="panel panel-default registration-panel panel-lite translucent-heavy">
+        <div class="panel-heading">
+            <h2 class="page-title text-center">{{type}} sign up</h2>
+        </div>
+        <div class="panel-body login_signup_panel">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group" style="margin-bottom: 10px; text-align: center;">
+                        <div id="regInstructions">Please fill out the following to sign up as a {{type}}. All fields are required.</div>
+                    </div>
+                </div>
+            </div>
+
+            <form role="form" method="post"
+                action="{% if type == 'publisher' %}{% url 'main:register_publisher' %}{% else %}{% url 'main:register_buyer' %}{% endif %}" id="signup_form" novalidate>
+
+                {% csrf_token %}
+
+                <div class="row">
+                    {% for err in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ err }}
+                    </div>
+                    {% endfor %}
+
+                    <div class="col-sm-12">
+                        {% for err in form.email.errors %}
+                            <div class="alert alert-danger">
+                                {{ err }}
+                            </div>
+                        {% endfor %}
+                        <div class="form-group">
+                            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                            {% render_field form.email %}
+                            <p class="text-muted">{{ form.email.help_text }}</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        {% for err in form.first_name.errors %}
+                            <div class="alert alert-danger">
+                                {{ err }}
+                            </div>
+                        {% endfor %}
+                        <div class="form-group">
+                            <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                            {% render_field form.first_name %}
+                            <p class="text-muted">{{ form.first_name.help_text }}</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        {% for err in form.last_name.errors %}
+                            <div class="alert alert-danger">
+                                {{ err }}
+                            </div>
+                        {% endfor %}
+                        <div class="form-group">
+                            <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                            {% render_field form.last_name %}
+                            <p class="text-muted">{{ form.last_name.help_text }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        {% for err in form.password1.errors %}
+                            <div class="alert alert-danger">
+                                {{ err }}
+                            </div>
+                        {% endfor %}
+                        <div class="form-group">
+                            <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+                            {% render_field form.password1 %}
+                            <p class="text-muted">{{ form.password1.help_text }}</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        {% for err in form.password2.errors %}
+                            <div class="alert alert-danger">
+                                {{ err }}
+                            </div>
+                        {% endfor %}
+                        <div class="form-group">
+                            <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+                            {% render_field form.password2 %}
+                            <p class="text-muted">{{ form.password2.help_text }}</p>
+                        </div>
+                    </div>
+
+                    {% if type|lower == 'buyer' %}
+                    <script>
+                        function showCouponDiv() {
+                            console.log('I clikced on link');
+                            $('#coupon_group').css('display', 'block');
+                            $('#coupon_link_group').css('display', 'none');
+                        }
+                    </script>
+                    <div class="col-sm-12" id="coupon_link_group">
+                        <div class="form-group">
+                            <a id="promo_show_link" href="javascript:void(0)" onClick="showCouponDiv()">Have a coupon code?</a>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12" id="coupon_group" style="display: none;">
+                        <div class="form-group">
+                            <label for="{{ form.coupon.id_for_label }}">{{ form.coupon.label }}</label>
+                            {% render_field form.coupon %}
+                            <p class="text-muted">{{ form.coupon.help_text }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+                {% if form.tos %}
+                <div class="row">
+                    <div class="form-group" style="padding: 15px;">
+                        <label class="checkbox-inline" style="font-size: 14px; font-weight: 300;">
+                            {% render_field form.tos %}&ensp;By selecting this box, you acknowledge that ShoutOur.Biz is a shout out brokerage. Your username will be shared with potential clients who are inquiring about our services.  Your pricing information will be kept within our team members and not published publicly. The price you provide is the best price you can offer. You are truthfully able to provide shoutouts for your set price.
+                        </label>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="row">
+                    <br>
+                    <button id="regButton" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
+ <div class="panel-custom-footer" style="margin-bottom: 30px;">
+    Already have an account? <a href="{% url 'main:login' %}">Login</a>.
+</div>
+{% endblock %}

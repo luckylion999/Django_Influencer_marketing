@@ -1,0 +1,120 @@
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="">
+
+	<title>Login</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'internal/html/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Menu CSS -->
+    <link href="{% static 'internal/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css' %}" rel="stylesheet">
+    <!-- animation CSS -->
+    <link href="{% static 'internal/html/css/animate.css' %}" rel="stylesheet">
+    <!-- Global CSS -->
+    <link href="{% static 'internal/html/css/style.css' %}" rel="stylesheet">
+    <!-- color CSS -->
+    <link href="{% static 'internal/html/css/colors/default.css' %}" id="theme" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'internal/html/css/login_custom.css' %}" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="{% static 'internal/plugins/bower_components/jquery/dist/jquery.min.js' %}"></script>
+
+</head>
+<body class="login">
+	<div class="container">
+	   <div class="row">
+	    <div class="col-md-6 col-md-offset-3">
+	      <div class="panel panel-login">
+	        <div class="panel-body">
+	          <div class="row">
+	            <div class="col-lg-12">
+
+
+	              	<form id="login-form" action="{% url 'internal:login' %}" method="post" role="form" style="display: block;">
+
+		              	{% csrf_token %}
+
+	                	<h2>LOGIN</h2>
+
+	                	<div class="form-group">
+		              		Please fill out the following to gain access.
+		              	</div>
+
+		              	{% if form.errors %}
+						    {% for field in form %}
+						        {% for error in field.errors %}
+						            <div class="alert alert-danger">
+						                <strong>{{ error|escape }}</strong>
+						            </div>
+						        {% endfor %}
+						    {% endfor %}
+						    {% for error in form.non_field_errors %}
+						        <div class="alert alert-danger">
+						            <strong>{{ error|escape }}</strong>
+						        </div>
+						    {% endfor %}
+						{% endif %}
+
+						<div class="form-group">
+							{% render_field form.username tabindex="1" id="username" class+="form-control form-control-line" placeholder="Email" %}
+						</div>
+
+						<div class="form-group">
+							{% render_field form.password tabindex="2" id="password" class+="form-control form-control-line" placeholder="Password" %}
+						</div>
+
+						 <input type="hidden" name="next_" value="/analyzer/profile/">
+
+						<div class="col-xs-6 form-group pull-left checkbox">
+							<a href="{% url 'main:password_reset' %}">Forgot your password?</a>
+						</div>
+						<div class="col-xs-6 form-group pull-right">     
+						    <button type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login waves-light waves-effect" value="Log In">Login</button>
+						</div>
+	              	</form>
+
+	            </div>
+	          </div>
+	        </div>
+
+	        <div class="panel-heading">
+				<div class="row" style="padding: 15px;">
+					Don't have an account? <a href="{% url 'internal:signup' %}">Register</a>.
+				</div>
+	        </div>
+
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<footer>
+	    <div class="container">
+	        <div class="col-md-10 col-md-offset-1 text-center">
+	            <h6 style="font-size:14px;font-weight:100;color: #fff;">2017 &copy; ShoutOur.Biz</a></h6>
+	        </div>   
+	    </div>
+	</footer>
+
+	<!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'internal/html/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <!-- Menu Plugin JavaScript -->
+    <script src="{% static 'internal/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js' %}"></script>
+    <!--slimscroll JavaScript -->
+    <script src="{% static 'internal/html/js/jquery.slimscroll.js' %}"></script>
+    <!--Wave Effects -->
+    <script src="{% static 'internal/html/js/waves.js' %}"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static 'internal/html/js/custom.min.js' %}"></script>
+
+</body>
+</html>

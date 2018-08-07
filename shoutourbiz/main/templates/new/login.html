@@ -1,0 +1,94 @@
+{% extends 'new/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row">
+
+<div class="container-fluid">
+
+<div class="col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3" id="loginCol">
+    <div class="panel panel-default login-panel translucent-heavy">
+        <div class="panel-heading">
+            <h2 class="page-title text-center">Login</h2>
+        </div>
+        <div class="panel-body" style="padding: 30px;">
+            <form role="form" method="post" action="{% url 'main:login' %}"> 
+
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group field-padding">
+                            Please provide your e-mail and password to gain access.
+                        </div>
+                    </div>
+                </div>
+
+                {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group field-padding">
+                            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                            {% for error in form.username.errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                            {% render_field form.username tabindex="1" id="username" class+="form-control form-control-line" %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group field-padding" style="margin-top: -5px;">
+                            <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                            {% for error in form.password.errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                            {% render_field form.password tabindex="2" id="password" class+="form-control form-control-line" %}
+                        </div>
+                    </div>
+                </div>
+
+
+                {% render_field form.next_ %}
+
+                <div class="col-xs-6 form-group pull-left checkbox">
+                    <a href="{% url 'main:password_reset' %}">Forgot your password?</a>
+                </div>
+                <div class="col-xs-6 form-group pull-right">     
+                    <button type="submit" name="login" id="login-submit" tabindex="4" class="btn btn-primary pull-right" value="Log In">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- <div class="panel-custom-footer">
+        Don't have an account? Register as a 
+        <a href="{% url 'main:register_buyer' %}">buyer</a> or 
+        <a href="{% url 'main:register_publisher' %}">publisher</a>.
+    </div> -->
+</div>
+
+</div>
+</div> <!-- end row -->
+{% endblock %}

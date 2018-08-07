@@ -1,0 +1,15 @@
+Change VerifiedUserAccounts models fields price and account_id to decimal field and big integer field, or to charfields. +
+Change VerifiedUserNiches +
+Make custom migrations to move old data. +
+Save note in add view +
+Add help text in forms +
+write migration to link igusers\twusers with verified accounts +
+
+FINISH REGISTRATION, LOGIN PAGES, PASSWORD RESET +
+TRACCK CURRENT PAYMENT FOR REFUNDS +
+JS REDIRECT USERS THAT ARENT MONTH BUYERS WHEN OPENING AN ACC/ JS GET NUMBER OF USES/ REFRESH EM +
+RESET USES TO DEFAULT NUMBER AT EVERY START OF THE MONTH
+ADD PERMISSIONS CHECK DECORATORS TO ALL VIEWS
+FIX IG SCRAPING SCRIPT (MOVE DB CONNECT INTO FUNCTIONS)
+ADD SENDING EMAIL WHEN USER IS SAVED TO DB
+FIX CACHE STATIC NGINX SETTING (EASY ENGINE) THAT BLOCKS STATICFILES

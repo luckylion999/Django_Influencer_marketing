@@ -1,0 +1,78 @@
+{% load static %}
+<script src="{% static 'home_static/js/jquery.min.js' %}"></script>
+
+{% block title %}
+
+	<title>Add Account</title>
+
+{% endblock %}
+
+{% block header %}
+
+	<h2>Add Account</h2>
+
+{% endblock %}
+
+{% block body %}
+
+	{% if authenticated %}
+	<form id="add_acc_form" method="post" action="/members/new_account_complete/">
+	  {% csrf_token %}
+
+	     <div id='network_heading'>Network: {{network}}</div>
+
+	    <div id='username_heading'>Username: {{username}}</div><br>
+	    
+	    <div id='niches_p'>Suggested Niches: {{niches}}</div><br>
+		<div id='ni'>Niches:<input id='niches' type="text" name="niches"/> (if you have multiple, seperate each with a comma)<br></div>
+
+		<div id='price_heading'>Price Per ShoutOut($US):<input id='price' type="text" name="price" requied/><br></div>
+
+	  <input id='submit' type="submit" value="Register"/>
+
+	{% if msg %}
+	<div id='msg' style='color:red'>{{msg}}</div>
+	{% endif %}
+
+
+	<input id='account' type="text" name="account" value="{{username}}" style="visibility:hidden"/>
+
+	<input id='network' type="text" name='network'value="{{networkSC}}" style="visibility:hidden"/>
+	<input id='userid' type="text" name='userid'value="{{userid}}" style="visibility:hidden"/>
+	</form>
+	  
+	{% else %}
+
+	<form id="add_acc_form" method="post" action="/members/new_account/">
+	  {% csrf_token %}
+
+	     <div id='network_heading'>Network:</div><select id='network' name='network' onchange="network_change(this)">
+		  <option value="ig">Instagram</option>
+		  <option value="tw">Twitter</option>
+		</select><br>
+
+	    <div id='username_heading'>Username:</div><input id='account' type="text" name="account" requied/><br>
+	    <input id='submit' type="submit" value="Authenticate"/>
+	    {% if msg %}
+		<div id='msg' style='color:red'>{{msg}}</div>
+		{% endif %}
+	</form>
+
+	{% endif %}
+
+
+
+{% endblock %}
+
+	<script>
+		function network_change(self){
+
+			var username_heading = document.getElementById("username_heading");
+
+			if(self.value == 'ig'){
+				username_heading.innerHTML='Username:'
+			}else if (self.value == 'tw'){
+				username_heading.innerHTML='Screen Name:'
+			}
+		}
+	</script>

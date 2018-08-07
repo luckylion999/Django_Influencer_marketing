@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Instagram Invoice</title>
+</head>
+<body>
+  Invoice generator for Instagram <br>
+  <table>
+      <tr>
+        <th>Current Total Price: </th>
+        <th id='total'>0</th>
+      </tr>
+  </table>
+  <form id="invoice_form" method="POST" action="/members/generate_instagram_invoice/">
+    {% csrf_token %}
+    <table>
+      <tr>
+        <th>Markup(%): </th>
+        <th><input id="markup" type="number" name="markup" defaultValue='0' Value='0'/></th>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <th>Price * Markup = </th>
+        <th id="mark_total">0</th>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <th>SELECT</th>
+        <th>USERNAME</th>
+        <th>UID</th>
+        <th>INDUSTRY</th>
+        <th>EMAIL</th>
+        <th>NUMBER OF FOLLOWERS</th>
+        <th>LIKES/POST</th>
+        <th>PRICE</th>
+        <th>FOLLOWERS/$</th>
+        <th>LIKES/$</th>
+      </tr>
+    {% for u in VerUserList %}
+      <tr>
+        <td><input type="checkbox" name="verCheckbox" value="{{u.uid}}"/></td> 
+        <td><a href='https://www.instagram.com/{{u.username}}/'>{{u.username}}</td>
+        <td>{{u.uid}}</td> 
+        <td>{{u.tag_str}}</td> 
+        <td>{{u.email}}</td> 
+        <td>{{u.fol}}</td> 
+        <td>{{u.lpp}}</td> 
+        <td name="price" value="{{u.price}}">{{u.price}}</td> 
+        <td>{{u.fpd}}</td> 
+        <td>{{u.lpd}}</td> 
+      </tr>
+    {% endfor %}
+    {% for u in UnverUserList %}
+      <tr>
+        <td><input type="checkbox" name="unverCheckbox" value="{{u.uid}}"/></td> 
+        <td><a href='https://www.instagram.com/{{u.username}}/'>{{u.username}}</td>
+        <td>{{u.uid}}</td>
+        <td>{{u.tag_str}}</td> 
+        <td>{{u.email}}</td>
+        <td>{{u.fol}}</td> 
+        <td>{{u.lpp}}</td> 
+        <td>-</td> 
+        <td>-</td> 
+        <td>-</td> 
+      </tr>
+    {% endfor %}
+    </table>
+
+
+    Enter Buyer Phone Number Here: <input type="text" name="phone"/> <br>
+    Enter Buyer Email Here: <input type="email" name="email"/> <br>
+    Enter Buyer Physical Address Here: <input type="text" name="addr"/> <br>
+    Enter Budget Here: $<input type="number" name="budget"/><br>
+<!--     Enter Email(s) Here (Optional): <input type="text" name="email"/> <br>
+    Note: If you want to have multiple email recipients, seperate each email with a semicolon, eg. ex1@mail.com;ex2@mail.com <br> -->
+    <input type="submit" value="Generate Invoice"/>
+  </form>  
+  <p id='msg'>{{msg}}</p>
+</body>
+</html>
+
+<script type="text/javascript">
+var invoice_form = document.getElementById('invoice_form');
+var price_total = document.getElementById('total');
+var markup = document.getElementById("markup");
+var mark_total = document.getElementById("mark_total");
+
+var unverCheckboxes = document.getElementsByName("unverCheckbox");
+var unverCheckbox, i;
+for(i = 0; unverCheckbox = unverCheckboxes[i]; i++) {
+  unverCheckbox.addEventListener('change', function() {
+    p_row = this.parentNode.parentNode.children[7];
+    if (this.checked) {
+      var price = document.createElement("input");
+      price.type = "number";
+      price.name = "price";
+      price.value = 0;
+      price.defaultValue = 0;
+      price.required = true;
+      price.addEventListener('focus',function(){
+          this.defaultValue = this.value;
+      },false);
+      price.addEventListener('change',function(){
+        price_total.innerHTML = parseInt(price_total.innerHTML) - parseInt(this.defaultValue) + parseInt(this.value);
+        this.defaultValue = this.value;
+        mark_total.innerHTML = (price_total.innerHTML * (1+parseInt(markup.value)/100)).toFixed(2);
+      },false);
+      p_row.innerHTML = '';
+      p_row.appendChild(price);
+
+    }else{
+      inp = p_row.children[0];
+      if (inp.value){
+        price_total.innerHTML = parseInt(price_total.innerHTML) - parseInt(inp.value);
+        mark_total.innerHTML = (price_total.innerHTML * (1+parseInt(markup.value)/100)).toFixed(2);
+      }
+      p_row.removeChild(inp);
+      p_row.innerHTML = '-';
+    }
+  }, false);
+}
+
+var verCheckboxes = document.getElementsByName("verCheckbox");
+var verCheckbox, i;
+for(i = 0; verCheckbox = verCheckboxes[i]; i++) {
+  verCheckbox.addEventListener('change', function() {
+    price = this.parentNode.parentNode.children[7].innerHTML;
+    if (this.checked) {
+      price_total.innerHTML = parseInt(price_total.innerHTML) + parseInt(price);
+      mark_total.innerHTML = (price_total.innerHTML * (1+parseInt(markup.value)/100)).toFixed(2);
+    }else{
+      price_total.innerHTML = parseInt(price_total.innerHTML) - parseInt(price);
+      mark_total.innerHTML = (price_total.innerHTML * (1+parseInt(markup.value)/100)).toFixed(2);
+    }
+  }, false);
+}
+
+markup.addEventListener('change', function() {
+  mark_total.innerHTML = (price_total.innerHTML * (1+parseInt(this.value)/100)).toFixed(2);
+  this.defaultValue = this.value;
+}, false);
+
+
+</script>

@@ -1,0 +1,59 @@
+{% extends 'pages/home_base.html' %}
+
+{% block title %}
+ShoutOur.biz - Edit Account
+{% endblock %}
+
+{% block header %}
+Edit Account
+{% endblock %}
+
+{% block content %}
+
+
+<div class="row">
+	{% if fail %}
+	<div class="col-lg-1">
+	<input class="btn btn-danger" type=button onClick="parent.location='/members/home/'" value='back to home page'>
+	</div>
+	{% else %}
+    <div class="col-lg-6">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                Edit Account
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <form id="edit_acc_form" role="form" method="post" action="/members/edit_account/">
+                	{% csrf_token %}
+	                <h4 id='account_header'>Accout Name: {{account}}</h4><br>
+		    		<h4 id='network_header'>Network: {{network}}</h4><br>
+	    			
+	    			<div class="form-group">
+                        <h4 id='niche_label'>Niches: </h4>
+                        <input id='niches' class="form-control" type="text" name="niches" value='{{niches}}'/>
+                    	<p class="help-block">if you have multiple, seperate each with a comma.</p>
+                    </div>
+                    <div class="row">
+    					<div class="col-lg-6">
+			    			<div class="form-group">
+		                        <h4 id='PPS_label'>Price Per ShoutOut($US): </h4>
+		                        <input id='price' class="form-control" type="text" name="price" value='{{price}}' requied/>
+		                    </div>
+	                    </div>
+                    </div>
+
+					<input class="btn btn-primary" id='submit' type="submit" value="Save"/>
+			  		<input class="btn btn-primary" type=button onClick="parent.location='/members/account_overview/?ac={{ac}}'" value='back'>
+	  				<input id='ac' type="text" name="ac" value='{{ac}}' style="visibility:hidden"/>
+					<input id='network' type="text" name="network" value='{{network}}' style="visibility:hidden"/>
+					<input id='account' type="text" name="account" value='{{account}}' style="visibility:hidden"/>
+	  			</form>
+            </div>
+            <!-- .panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

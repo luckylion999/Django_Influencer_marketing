@@ -1,0 +1,42 @@
+{% extends 'pages/home_base.html' %}
+
+{% block title %}
+ShoutOur.biz - Account Overview
+{% endblock %}
+
+{% block header %}
+Account Overview
+{% endblock %}
+
+{% block content %}
+
+
+<div class="row">
+    {% if fail %}
+    <div class="col-lg-1">
+    <input class="btn btn-danger" type=button onClick="parent.location='/members/home/'" value='back to home page'>
+    </div>
+    {% else %}
+    <div class="col-lg-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Account Overview
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <h4 id='username'>Accout Name: {{account}}</h4><br>
+                <h4 id='network'>Network: {{network}}</h4><br>
+                <h4 id='niches'>Niches: <br> 
+                                &nbsp {{niches}}</h4><br>
+                <h4 id='price'>Price Per ShoutOut($US): <br>
+                                &nbsp ${{price}}</h4><br>
+                <input class="btn btn-primary" type=button onClick="parent.location='/members/edit_account/?ac={{ac}}'" value='Edit Account'>
+                <input class="btn btn-primary" type=button onClick="parent.location='/members/home/'" value='back'>
+            </div>
+            <!-- .panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

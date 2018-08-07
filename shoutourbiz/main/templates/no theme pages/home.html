@@ -1,0 +1,26 @@
+{% block title %}
+
+	<title>Home</title>
+
+{% endblock %}
+
+{% block header %}
+
+	<h2>Home</h2>
+
+{% endblock %}
+
+{% block body %}
+
+	Email: {{email}} <br>
+	Your Niches: {{niches}}<br>
+	Your Account(s):  <br>
+	&nbsp Instagram: {% for acc in ig_accounts %}<a href="/members/account_overview/?ac={{acc.id}}">{{acc.username}}</a> &nbsp {% endfor %} <br>
+	&nbsp Twitter: {% for acc in tw_accounts %}<a href="/members/account_overview/?ac={{acc.id}}">{{acc.username}}</a> &nbsp {% endfor %}<br>
+	<input type=button onClick="parent.location='/members/new_account/'" value='add new account'>
+
+	{% if msg %}
+	<div id='msg' style='color:red'>{{msg}}</div>
+	{% endif %}
+
+{% endblock %}

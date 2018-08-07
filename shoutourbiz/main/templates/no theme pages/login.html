@@ -1,0 +1,25 @@
+{% extends 'log_reg_base.html' %}
+
+  {% block title %}
+
+    <title>Login</title>
+
+  {% endblock %}
+
+  {% block header %}
+
+    <h1>Log in</h1>
+    
+  {% endblock %}
+
+{% block form %}
+
+  <form id="login_form" method="post" action="/members/login/">
+    {% csrf_token %}
+
+    <input id='username' type="email" name="username" placeholder="Email" required/>
+    <input id='password' type="password" name="password" placeholder="Password" required/>
+    <input type="submit" value="Log in"/>
+  </form>  
+
+{% endblock %}

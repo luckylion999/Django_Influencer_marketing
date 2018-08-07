@@ -1,0 +1,55 @@
+{% extends "payments/base.html" %}
+
+{% block title %}Payment History{% endblock title %}
+
+{% block body %}
+    {% include "payments/_subscription_status.html" %}
+    <div class="row">
+
+    <div class="container-fluid">
+
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default login-panel translucent-heavy">
+                <div class="panel-heading">
+                    <h2 class="page-title text-center">Your Transaction History</h2>
+                </div>
+                <div class="panel-body" style="padding: 30px;">
+                    {% if request.user.customer.invoices.all %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            {% for invoice in request.user.customer.invoices.all %}
+                                <tr>
+                                    <td class="fixed">#{{ invoice.id }}</td>
+                                    <td>{{ invoice.date|date:"M d" }}</td>
+                                    <td>
+                                        {% if invoice.paid and invoice.total > 0 %}
+                                            <p>
+                                                <span class="label label-success">Paid</span> ${{ invoice.total|floatformat:"2" }}
+                                            </p>
+                                        {% endif %}
+
+                                        {% if invoice.paid and invoice.total < 0 %}
+                                            <p>
+                                                <span class="label label-success">Credit</span> ${{ invoice.total|floatformat:"2" }}
+                                            </p>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <p>You have not made any payments yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div> <!-- end row -->
+{% endblock %}

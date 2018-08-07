@@ -1,0 +1,41 @@
+{% extends 'analyzer_base.html' %}
+
+{% block title %}Internal - Demographics Analyzer{% endblock %}
+{% block username %}{{ user }}{% endblock %}
+
+
+{% block page_content %}
+<div class="row bg-title">
+    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+        <h4 class="page-title">Demographics Analyzer</h4> </div>
+    <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+        <a href="{% url 'internal:logout' %}" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light">Logout</a>
+        <ol class="breadcrumb">
+            <li>Home</li>
+            <li>Internal</li>
+            <li class="active">Demographics Analyzer</li>
+        </ol>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="white-box">
+                <h3 class="box-title">Demographics Analyzer</h3>
+                <br/>
+
+                <p>
+                    You will be given a list of Instagram users. Your goal will be to evaluate each user's age, country of origin, and gender. You can stop at any time and return to this page to pick up from where you left off. Your responses will be recorded. 
+                </p>
+                <p>
+                    Please select 'Next' to begin.
+                </p>
+
+                <br/>
+                <button class="btn btn-lg btn-block" onclick="location.href='{% url 'internal:evaluate_ui' %}'">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

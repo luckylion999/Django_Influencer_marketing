@@ -1,0 +1,88 @@
+{% load url from future %}
+{% load bootstrap_tags %}
+
+<div class="row">
+
+    <div class="container-fluid">
+
+        <div class="col-md-6">
+            <div class="panel panel-default login-panel translucent-heavy">
+                <div class="panel-heading">
+                    <h2 class="page-title text-center">Subscribe Status</h2>
+                </div>
+                <div class="panel-body" style="padding: 30px;">
+                    {% if request.user.customer.current_subscription %}
+                        <div class="tagsinput subscribe-tag-div">
+                            <span class="subscribe-status-title">Subscription Status</span>
+                            <span class="tag label-info subscribe-status">
+                                {{ customer.current_subscription.status }}
+                            </span>
+                        </div>
+                        <div class="tagsinput subscribe-tag-div">
+                            <span class="subscribe-status-title">Subscription Period</span>
+                            <span class="tag label-info subscribe-status">
+                                {{ customer.current_subscription.current_period_start }} ~
+                                {{ customer.current_subscription.current_period_end }}
+                            </span>
+                        </div>
+                        <div class="tagsinput subscribe-tag-div">
+                            <span class="subscribe-status-title">Subscription Amount</span>
+                            <span class="tag label-info subscribe-status">
+                                $ {{ customer.current_subscription.amount }}
+                            </span>
+                        </div>
+                    {% else %}
+                        <div class="tagsinput subscribe-tag-div">
+                            <span class="subscribe-status-title">Subscription Status</span>
+                            <span class="tag label-info subscribe-status">
+                                Please Subscribe to get more credits.
+                            </span>
+                        </div>
+                        <div class="tagsinput subscribe-tag-div">
+                            <span class="subscribe-status-title">Subscription Period</span>
+                            <span class="tag label-info subscribe-status">
+                                Please Subscribe to get more credits.
+                            </span>
+                        </div>
+                        <div class="tagsinput subscribe-tag-div">
+                            <span class="subscribe-status-title">Subscription Amount</span>
+                            <span class="tag label-info subscribe-status">
+                                Please Subscribe to get more credits.
+                            </span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-default login-panel translucent-heavy">
+                <div class="panel-heading">
+                    <h2 class="page-title text-center">Subscribe</h2>
+                </div>
+                <div class="panel-body" style="padding: 30px;">
+                    <div class="subscribe-form">
+                        <h3>Purchase a Subscription</h3>
+                        <p class="lead">Provide your payment details to start your subscription today.</p>
+                        {% if error %}
+                            <div class="alert alert-warning">
+                                <strong>Warning!</strong> {{ error }}.
+                            </div>
+                        {% endif %}
+
+                        <form action="{% url 'payments:payments_ajax_subscribe' %}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" data-replace-closest=".subscribe-form" method="POST">
+                            {% csrf_token %}
+                            {{ form|as_bootstrap }}
+                            <input name="stripe_token" type="hidden" />
+                            Coupon Code: <input type=text size="6" id="coupon" name="coupon_id" class="form-control"/>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Subscribe</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div> <!-- end row -->

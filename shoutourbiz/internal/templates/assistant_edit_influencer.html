@@ -1,0 +1,264 @@
+{% load widget_tweaks %}
+{% load static %}
+{% load shoutourbiz_tags %}
+
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- jQuery -->
+<script src="{%static 'js/lib/jquery.min.js' %}"></script>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{% block title %}Edit {{ username }}{% endblock %}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Custom Fonts -->
+    <link href="{%static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- Theme CSS -->
+    <link href="{% static 'base.css' %}" rel="stylesheet">
+
+    <!-- Bootstrap material design -->
+    <link href="{% static 'css/bootstrap-material-design.css' %}" rel="stylesheet">
+    <link href="{% static 'css/ripples.min.css' %}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{%static 'panel.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'internal/html/css/login_custom.css' %}" rel="stylesheet">
+    <link href="{% static 'internal/html/css/custom.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700,400italic|Lato:700|Montserrat:700">
+</head>
+
+<body>
+
+    <div class="row">
+        <div id="loader-background">
+            <div id="loader-wrapper">
+                <div id="loader"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="wrapper">
+
+        {% include 'new/partials/navbar.html' %}
+
+        <!-- Page Content -->
+        <div id="content" class="container-fluid">
+            <div id="messages">
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div class="alert {% if msg.tags %}{{ msg.tags }}{% else %}alert-info{% endif %}">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                </div>
+
+
+                {% block content %}
+                <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="modal-title text-center">EDIT {{ username }}</h3>
+                                <button class="btn btn-danger" id="deleteAccBtn" data-toggle="modal" data-target="#deleteAccModal">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>&ensp;Delete
+                                </button>
+                            </div>
+
+                            <div class="panel-body" style="padding: 30px;">
+                            
+                                <form method="POST" class="submit_edit_influencer_form" action="{% url 'internal:assistant_edit_influencer_post' %}">
+                                    {% csrf_token %}
+
+                                    <div id="edit_niches" class="fade in">
+
+                                    <div class="table-responsive">
+                                        <table class="table" style="margin-bottom: 2px;">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Account ID</td>
+                                                    <td>{{ usr_id }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Username</td>
+                                                    <td>
+                                                        {% render_field user_name_field.user_name_field style="width: 100%; padding: 5px 10px 5px 10px;" %}
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Email</td>
+                                                    <td>
+                                                        {% if request.user.is_superuser %}
+                                                            {{ email }}
+                                                        {% else %}
+                                                            <span class="starred">{{email|starred}}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Network</td>
+                                                    <td>{{ network }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Price</td>
+                                                    <td>
+                                                        {% if not is_verified %}
+                                                            Not available for unverified profiles
+                                                        {% else %}
+                                                            {{ acc.price }}
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Edit niches</td>
+                                                    <td>
+                                                        <div style="margin: 5px;">Separate each niche with a comma.</div>
+                                                        <script>
+
+                                                        function ButtonClick(text){
+                                                          var textbox = $('#id_niches').val();
+                                                          $('#id_niches').addTag(text);
+                                                        }
+                                                        </script>
+
+                                                        {% for niche in most_popular_niches %}
+                                                        <!-- button class is in internal/static/internal/css/custom.css -->
+                                                        <input type="button" value="{{ niche }}" class="button" name="no" onclick="ButtonClick( '{{ niche }}');">
+                                                        {% endfor %}
+
+                                                        {% render_field edit_infl_form.niches style="width: 100%; padding: 10px;" %}
+
+                                                        <input type="hidden" name="email" value="{{ acc.email }}">
+                                                        <input type="hidden" name="usr_id" value="{{ acc.id }}">
+                                                        <input type="hidden" name="network" value="{{ network }}">
+                                                        <input type="hidden" name="username" value="{{ username }}">
+                                                        <input type="hidden" name="account_id" value="{{ usr_id }}">
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Full Name</td>
+                                                    <td>
+                                                        {% if fullname_form.fullname.value == '' %}
+                                                            <input type="text" name="fullname" value="{{ username }}" style="width: 100%; padding: 5px 10px 5px 10px;">
+                                                        {% else %}
+                                                            {% render_field fullname_form.fullname style="width: 100%; padding: 5px 10px 5px 10px;" %}
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Twitter Username</td>
+                                                    <td>
+                                                        {% render_field edit_twitter_username_form.twitter_username style="width: 100%; padding: 5px 10px 5px 10px;" %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Facebook Username</td>
+                                                    <td>
+                                                        {% render_field edit_facebook_username_form.facebook_username style="width: 100%; padding: 5px 10px 5px 10px;" %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>YouTube Username</td>
+                                                    <td>
+                                                        {% render_field edit_youtube_username_form.youtube_username style="width: 100%; padding: 5px 10px 5px 10px;" %}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-center">
+                                        <a title="Close window" onclick="javascript:window.close();opener.window.focus();" class="btn btn-default btn-block" style="float: left; width: 49%;" type="button">
+                                            <i class="fa fa-times" aria-hidden="true"></i>&ensp;Close
+                                        </a>
+                                        <button class="btn btn-success pull-right" type="submit" style="width: 49%;">Save niches</button>
+                                    </div>
+                            
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="deleteAccModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Delete {{ username }}?</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Are you sure you want to delete {{ username }}? If this influencer is confirmed, that info will be deleted as well. This action is <b>not</b> reversible, and there is no coming back from this point. Please confirm by pressing <i>Delete</i>. If you change your mind, please close this message by pressing <i>Close</i>.
+                                </p>
+
+                                <input type="hidden" id="delete_network" name="network" value="{{ network }}">
+                                <input type="hidden" id="delete_unconfirmed_id" name="unconfirmed_id" value="{{ usr_id }}">
+
+                            </div>
+                            <div class="modal-footer">
+                                <button id="deleteAccBtnSubmit" class="btn btn-danger">Delete</button>
+                                <button class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endblock %}
+
+        </div>
+    </div>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- Obfuscate text -->
+    <script src="{% static 'js/baffle.min.js' %}"></script>
+
+    <!-- Tags input -->
+    <script src="{% static 'js/jquery.tagsinput.js' %}"></script>
+
+    <!-- Bootstrap material design -->
+    <script src="{% static 'js/material.min.js' %}"></script>
+    <script src="{% static 'js/ripples.min.js' %}"></script>
+
+    <!-- App scripts -->
+    <script src="{% static 'js/global.js' %}"></script>
+    <script src="{% static 'internal/internal.js' %}"></script>
+
+    <script>
+    // variables
+    var delete_url = "{% url 'internal:delete_influencer' %}";
+    var csrf = "{{ csrf_token }}";
+    </script>
+
+    {% if success %}
+    <script>
+        var index_url = "{% url 'internal:index_model' %}?uid={{usr_id}}&email={{email}}&network={{network}}&verified={{is_verified}}";
+
+        $.get(index_url, function( data ) {
+        });
+    </script>
+    {% endif %}
+</body>
+
+</html>

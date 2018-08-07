@@ -1,0 +1,42 @@
+a {
+    color: #5B79E2;
+}
+a:hover {
+    color: #855AE4;
+}
+
+.tag.label-info.subscribe-status {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+    width: 65%;
+    background-color: #5B79E2;
+}
+
+.tagsinput.subscribe-tag-div {
+    border: none;
+    text-align: center;
+}
+
+.subscribe-status-title {
+    display: inline-block;
+    vertical-align: middle;
+    width: 30%;
+}
+
+.stripe-button-el span,
+.Button-animationWrapper-child--primary {
+    background-color: red !important;
+}
+
+.panel-body p {
+    font-size: 1.7rem;
+}
+
+.alert {
+    font-size: 1.4rem;
+}
+
+#cancelPanel p.lead {
+    text-align: center;
+}

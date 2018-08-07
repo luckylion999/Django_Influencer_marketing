@@ -1,0 +1,39 @@
+{% extends 'pages/home_base.html' %}
+
+{% block title %}
+ShoutOur.biz - Add Account
+{% endblock %}
+
+{% block header %}
+Add Account
+{% endblock %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="panel panel-success">
+
+            <div class="panel-heading">
+                Add Account - Authentication
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <h5>Your account has been added. You may authenticate your account by clicking the 'Authenticate' button below</h5>
+                <form id="add_acc_form" role="form" method="post" action="/members/new_account_auth/">
+                    {% csrf_token %}
+                  
+                    <input id='account' type="hidden" name="account" value="{{username}}"/>
+                    <input id='network' type="hidden" name='network'value="{{network}}"/>
+
+                    <input class="btn btn-primary" id='submit' type="submit" value="Authenticate"/>
+                    <a href='/members/home/'>skip</a>
+                </form>
+            </div>
+            <!-- .panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+</div>
+{% endblock %}

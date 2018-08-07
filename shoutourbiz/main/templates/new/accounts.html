@@ -1,0 +1,281 @@
+{% load shoutourbiz_tags %}
+{% load string_replace %}
+{% load humanize %}
+{% load static %}
+
+{% if page %}
+<div class="table-responsive" data-network="{{ network }}" id="homePanelTableDiv">
+    <table class="table tablesorter table-striped" id="homePanelTable">
+        {% if network == 'ig' %}
+        <thead>
+        <tr>
+            <th class="col-md-1" class="sorter" id="idHeader">
+                <a href="javascript:void(0)" class="link-sort-header">ID</a>
+            </th>
+            <th class="{% if has_unverified %}col-md-2{% else %}col-md-2{% endif %}">Username</th>
+            <th class="col-md-1" class="sorter" id="followersHeader">
+                <a href="javascript:void(0)" class="link-sort-header">Followers</a>
+            </th>
+            {% if has_unverified %}
+            <th class="col-md-1" class="sorter" id="confirmedHeader">
+                <a href="javascript:void(0)" class="link-sort-header">Confirmed</a>
+
+                <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="Influencers with a green check mark have confirmed their account and contact info with us"><i class="fa fa-question" aria-hidden="true"></i>
+                </a>
+            </th>
+            {% endif %}
+            <th class="col-md-1" class="sorter" id="cpmHeader">
+                <a href="javascript:void(0)" class="link-sort-header">CPM</a>
+
+                <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="Cost per 1,000 impressions (USD)"><i class="fa fa-question" aria-hidden="true"></i>
+                </a>
+            </th>
+            <th class="col-md-2" class="sorter" id="engagementHeader">
+                <a href="javascript:void(0)" class="link-sort-header">Engagement</a>
+            </th>
+            <th class="col-md-3" id="accountsNichesCol">Niches</th>
+            <th class="{% if has_unverified %}col-md-3{% else %}col-md-3{% endif %}">Email</th>
+        </tr>
+        </thead>
+        {% else %}
+        <thead>
+        <tr>
+            <th class="col-md-1" class="sorter" id="idHeader">
+                <a href="javascript:void(0)" class="link-sort-header">ID</a>
+            </th>
+            <th class="col-md-2">Username</th>
+            <th class="col-md-1" class="sorter" id="followersHeader">
+                <a href="javascript:void(0)" class="link-sort-header">Followers</a>
+            </th>
+            {% if has_unverified %}
+            <th class="col-md-2" class="sorter" id="confirmedHeader">
+                <a href="javascript:void(0)" class="link-sort-header">Confirmed</a>
+
+                <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="Influencers with a green check mark have confirmed their account and contact info with us"><i class="fa fa-question" aria-hidden="true"></i>
+                </a>
+            </th>
+            {% endif %}
+            <th class="col-md-2" class="sorter" id="cpmHeader">
+                <a href="javascript:void(0)" class="link-sort-header">CPM</a>
+
+                <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="Cost per 1,000 impressions (USD)"><i class="fa fa-question" aria-hidden="true"></i>
+                </a>
+            </th>
+            <th class="col-md-4" id="accountsNichesCol">Niches</th>
+            <th class="col-md-2">Email</th>
+        </tr>
+        </thead>
+        {% endif %}
+
+        <tbody>
+        {% for obj in page %}
+            <tr class="account-entry" data-id="{{ obj.iid }}">
+                <td data-value="{{ obj.iid }}">{{ obj.iid }}</td>
+                <td>
+                    {% if request.user.is_superuser or is_assistant or request.user.is_authenticated and obj.verified_acc in request.user.opened_accounts.all %}
+                        <div class="purple-tooltip"  data-toggle="tooltip" title="{{ obj.username|valid_username }}">
+                            {{ obj.username|valid_username }}
+                        </div>
+                    {% else %}
+                        {% if not unlocked_users %}
+                            <div class="purple-tooltip">
+                                <span class="transbox">
+                                    {{ obj.username|valid_username|truncatechars:15|randomize }}
+                                </span>
+                            </div>
+                        {% else %}
+                            {% if obj.iid in unlocked_users %}
+                                <div class="purple-tooltip"  data-toggle="tooltip" title="{{ obj.username|valid_username }}">
+                                    {{ obj.username|valid_username }}
+                                </div>
+                            {% else %}
+                               <div class="purple-tooltip">
+                                    <span class="transbox">
+                                        {{ obj.username|valid_username|truncatechars:15|randomize }}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td data-value="{{ obj.followers }}">
+                    {% if obj.followers == 'None' or obj.followers == -1 %}
+                        -
+                    {% else %}
+                        {{ obj.followers|intcomma }}
+                    {% endif %}
+                </td>
+                {% if has_unverified %}
+                <td>
+                    {% if obj.verified > 0 %}
+                    <span class="green full-col">
+                        <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                    </span>
+                    {% else %}
+                        <span class="full-col">-</span>
+                    {% endif %}
+                </td>
+                {% endif %}
+                <td data-value="{% if obj.verified_acc %}{{ obj.verified_acc.cpm }}{% else %}0{% endif %}">
+                    {% if obj.verified > 0 and obj.cpm and obj.cpm > 0 %}
+                        <span class="full-col">{{ obj.cpm|floatformat:2|intcomma }}</span>
+                    {% elif obj.verified > 0 and obj.cpm == 0 %} 
+                        <span class="full-col">0.00</span>
+                    {% else %}
+                        <span class="full-col">-</span>
+                    {% endif %}
+                </td>
+                {% if network == 'ig' %}
+                <td>
+                    {% if obj.engagement < 0 %}
+                        -
+                    {% else %}
+                        {{ obj.engagement|percentage }}%
+                    {% endif %}
+                </td>
+                {% endif %}
+                <td>
+                    <div>
+                        {% if obj.verified > 0 %}
+
+                            {% for niche in obj|get_obj_from_index|get_verified_niches_arr|first_five %}
+                                <span class="badge" style="display: inline-block;">{{ niche|lower|truncatechars:30 }}</span>
+                            {% endfor %}
+
+                        {% else %}
+                            
+                            {% for niche in obj.text|convert_text_to_array %}
+                                <span class="badge" style="display: inline-block;">{{ niche|lower|truncatechars:30 }}</span>
+                            {% endfor %}
+
+                        {% endif %}
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        {% if request.user.is_superuser or request.user.is_authenticated and obj.verified_acc in request.user.opened_accounts.all %}
+                            <div class="purple-tooltip" data-toggle="tooltip" title="{{ obj.verified_acc.email }}">
+                                {% if obj.verified_acc %}
+                                    {{ obj.verified_acc.email }}
+                                {% else %}
+                                    {{ obj.email }}
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            {% if not unlocked_users %}
+                                <div class="transbox-container">
+                                    <span class="transbox">
+                                        {% if obj.verified_acc %}
+                                            {{ obj.verified_acc.email|randomize }}
+                                        {% else %}
+                                            {{ obj.email|randomize }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            {% else %}
+                                {% if obj.iid in unlocked_users %}
+                                    <div class="purple-tooltip" data-toggle="tooltip" title="{{ obj.verified_acc.email }}">
+                                        {% if obj.verified_acc %}
+                                            {{ obj.verified_acc.email }}
+                                        {% else %}
+                                            {{ obj.email }}
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <div class="transbox-container">
+                                        <span class="transbox">
+                                            {% if obj.verified_acc %}
+                                                {{ obj.verified_acc.email|randomize }}
+                                            {% else %}
+                                                {{ obj.email|starred|randomize }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div id="loader-background-bottom">
+            <div id="loader-wrapper">
+                <div id="loader"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="stick-to-bot col-md-12">
+    <div class="text-center">
+        <ul class="pagination">
+            {% if page.number >= 4 %}
+                <li>
+                    <a class="page" href="{% url 'main:accounts_page' network %}?page=1&search={{ search }}&niches={{ niches }}&min_followers={{ min_followers }}&max_followers={{ max_followers }}&min_cpm={{ min_cpm }}&max_cpm={{ max_cpm }}&min_engagement={{ min_engagement }}&max_engagement={{ max_engagement }}{% if has_unverified %}&unverified=true{% endif %}{% if order_by and order_by != 'None' %}&order_by={{order_by}}{% else %}&order_by=followers_reverse{% endif %}">1
+                    </a>
+                </li>
+                <li><a>...</a></li>
+            {% endif %}
+
+            {% for page_num in page_range %}
+                {% if page_num == page.number %}
+                    <li class="active"><a class="page" href="javascript:void(0);">{{ page_num }}</a></li>
+                {% else %}
+                    <li>
+                        <a class="page" href="{% url 'main:accounts_page' network %}?page={{ page_num }}&niches={{ niches }}&min_followers={{ min_followers }}&max_followers={{ max_followers }}&min_cpm={{ min_cpm }}&max_cpm={{ max_cpm }}&min_engagement={{ min_engagement }}&max_engagement={{ max_engagement }}{% if has_unverified %}&unverified=true{% endif %}{% if order_by and order_by != 'None' %}&order_by={{order_by}}{% else %}&order_by=followers_reverse{% endif %}">
+                            {{ page_num }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page.number <= paginator.num_pages|subtract:3 and paginator.num_pages > 4 and page.number != paginator.num_pages %}
+                <li><a>...</a></li>
+                <li>
+                    <a class="page" href="{% url 'main:accounts_page' network %}?page={{ paginator.num_pages }}&search={{ search }}&niches={{ niches }}&min_followers={{ min_followers }}&max_followers={{ max_followers }}&min_cpm={{ min_cpm }}&max_cpm={{ max_cpm }}&min_engagement={{ min_engagement }}&max_engagement={{ max_engagement }}{% if has_unverified %}&unverified=true{% endif %}{% if order_by and order_by != 'None' %}&order_by={{order_by}}{% else %}&order_by=followers_reverse{% endif %}">
+                    {{ paginator.num_pages }}
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+</div>
+
+{% else %}
+<div class="table-responsive" style="display: none;">
+    <br>
+    <h4 class="text-center">No accounts were found.</h4>
+</div>
+{% endif %}
+
+<script>
+var main_account_detail_url = '{% url 'main:account_detail' %}';
+var global_order_by = '{{order_by}}';
+var network = '{{network}}';
+var sob_page_number = '{{ page.number }}';
+var sob_network = '{{ network }}';
+var sob_niches = '{{ niches }}';
+var sob_min_followers = '{{ min_followers }}';
+var sob_max_followers = '{{ max_followers }}';
+var sob_min_cpm = '{{ min_cpm }}';
+var sob_max_cpm = '{{ max_cpm }}';
+var sob_min_engagement = '{{ min_engagement }}';
+var sob_max_engagement = '{{ max_engagement }}';
+</script>
+
+{% if network == 'ig' %}
+<script>
+var profile_details_url = "{% url 'profiles:influencer_details' network="ig" uid=0 %}";
+</script>
+{% else %}
+<script>
+var profile_details_url = "{% url 'profiles:influencer_details' network="tw" uid=0 %}";
+</script>
+{% endif %}
+
+<script src="{% static 'js/accounts.js' %}?v=1.0.0"></script>

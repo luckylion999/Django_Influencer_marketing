@@ -1,0 +1,105 @@
+{% extends 'pages/home_base.html' %}
+
+{% block title %}
+ShoutOur.biz - Add Account
+{% endblock %}
+
+{% block header %}
+Add Account
+{% endblock %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="panel panel-success">
+
+            <div class="panel-heading">
+                Add Account
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                {% if got_username %}
+                    <form id="add_acc_form" role="form" method="post" action="{% url 'main:new_account_complete' %}">
+                    	{% csrf_token %}
+
+                        <h4 id='account_header'>Network: {{network}}</h4><br>
+                        <h4 id='account_header'>Username: {{username}}</h4><br>
+                        <h4 id='account_header'>Suggested Niches: {{niches}}</h4><br>
+        			
+    	    			<div class="form-group">
+                            <h4 id='niche_label'>Niches: </h4>
+                            {% if niches != "None" %}
+                            <input id='niches' class="form-control" type="text" name="niches" value='{{niches}}'/>
+                            {% else %}
+                            <input id='niches' class="form-control" type="text" name="niches"/>
+                            {% endif %}
+                        	<p class="help-block">if you have multiple, seperate each with a comma.</p>
+                        </div>
+                        <div class="row">
+        					<div class="col-lg-6">
+    			    			<div class="form-group">
+    		                        <h4 id='PPS_label'>Price Per ShoutOut($US): </h4>
+    		                        <input id='price' class="form-control" type="text" name="price" value='{{price}}' requied/>
+    		                    </div>
+    	                    </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h4 id='note_label'>Other Note/Request: </h4>
+                            <textarea id='note' class="form-control" rows="3" type="text" name="note" value='{{note}}'></textarea>
+                        </div>
+
+    					<input class="btn btn-primary" id='submit' type="submit" value="Register">
+    			  		<input class="btn btn-primary" type=button onClick="parent.location='/members/home/'" value='back to home page'>
+                        <input id='account' type="hidden" name="account" value="{{username}}" />
+                        <input id='network' type="hidden" name='network'value="{{networkSC}}"/>
+    	  			</form>
+                {% else %}
+                    <form id="add_acc_form" role="form" method="post" action="{% url 'main:new_account' %}">
+                        {% csrf_token %}
+
+
+                        <div class="form-group">
+                            <h4 id='username_label'>Username: </h4>
+                            <input id='account' class="form-control" type="text" name="account" requied/>
+                        </div>
+
+                        
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <h4 id='network_label'>Network: </h4>
+                                    <select id='network' class="form-control" name='network' onchange="network_change(this)" />
+                                        <option value="ig">Instagram</option>
+                                        <option value="tw">Twitter</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input class="btn btn-primary" id='submit' type="submit" value="Register"/>
+                    </form>
+                {% endif %}
+            </div>
+            <!-- .panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+</div>
+
+    <script>
+        function network_change(self){
+
+            var username_label = document.getElementById("username_label");
+
+            if(self.value == 'ig'){
+                username_label.innerHTML='Username:'
+            }else if (self.value == 'tw'){
+                username_label.innerHTML='Screen Name:'
+            }
+        }
+
+    </script>
+{% endblock %}

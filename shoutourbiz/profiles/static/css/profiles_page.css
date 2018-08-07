@@ -1,0 +1,244 @@
+.white-box {
+    background: #fff;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.user-bg-logged-in {
+	background: rgba(91,123,231,1);
+	background: -moz-linear-gradient(left, rgba(91,123,231,1) 0%, rgba(129,93,232,0.88) 59%, rgba(129,93,232,0.8) 100%);
+	background: -webkit-gradient(left top, right top, color-stop(0%, rgba(91,123,231,1)), color-stop(59%, rgba(129,93,232,0.88)), color-stop(100%, rgba(129,93,232,0.8)));
+	background: -webkit-linear-gradient(left, rgba(91,123,231,1) 0%, rgba(129,93,232,0.88) 59%, rgba(129,93,232,0.8) 100%);
+	background: -o-linear-gradient(left, rgba(91,123,231,1) 0%, rgba(129,93,232,0.88) 59%, rgba(129,93,232,0.8) 100%);
+	background: -ms-linear-gradient(left, rgba(91,123,231,1) 0%, rgba(129,93,232,0.88) 59%, rgba(129,93,232,0.8) 100%);
+	background: linear-gradient(to right, rgba(91,123,231,1) 0%, rgba(129,93,232,0.88) 59%, rgba(129,93,232,0.8) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5b7be7', endColorstr='#815de8', GradientType=1 );
+}
+
+.user-bg-logged-out {
+	background: rgba(161,230,246,1);
+	background: -moz-linear-gradient(left, rgba(161,230,246,1) 1%, rgba(161,230,246,0.96) 35%, rgba(150,227,245,0.94) 48%, rgba(104,215,240,1) 100%);
+	background: -webkit-gradient(left top, right top, color-stop(1%, rgba(161,230,246,1)), color-stop(35%, rgba(161,230,246,0.96)), color-stop(48%, rgba(150,227,245,0.94)), color-stop(100%, rgba(104,215,240,1)));
+	background: -webkit-linear-gradient(left, rgba(161,230,246,1) 1%, rgba(161,230,246,0.96) 35%, rgba(150,227,245,0.94) 48%, rgba(104,215,240,1) 100%);
+	background: -o-linear-gradient(left, rgba(161,230,246,1) 1%, rgba(161,230,246,0.96) 35%, rgba(150,227,245,0.94) 48%, rgba(104,215,240,1) 100%);
+	background: -ms-linear-gradient(left, rgba(161,230,246,1) 1%, rgba(161,230,246,0.96) 35%, rgba(150,227,245,0.94) 48%, rgba(104,215,240,1) 100%);
+	background: linear-gradient(to right, rgba(161,230,246,1) 1%, rgba(161,230,246,0.96) 35%, rgba(150,227,245,0.94) 48%, rgba(104,215,240,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a1e6f6', endColorstr='#68d7f0', GradientType=1 );
+}
+
+.user_img_container {
+	padding-top: 5px;
+}
+.user_img {
+	padding: 0px;
+	display: block;
+	margin: 0 auto;
+	background-size: cover; 
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
+	position: relative;
+	margin-top: 5px !important;
+	border: solid 2px #E8E8E8;
+}
+
+.overlay-box {
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+.overlay-box-no-cover {
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+.overlay-box h3,
+.overlay-box h4,
+.overlay-box-no-cover h3,
+.overlay-box-no-cover h4 {
+	padding: 10px;
+}
+
+.user-info .bio {
+	padding: 5px;
+	text-align: center;
+}
+.user-info .social-media-bar {
+	padding: 10px;
+	margin-top: 5px;
+	overflow: auto;
+
+	border-top: 1px solid #e2e2e2;
+}
+.user-info .logo {
+	font-size: 1.7em;
+	font-weight: 300;
+	color: #374F62;
+}
+.user-info .stats_top,
+.user-info .stats_bottom {
+	display: block;
+	text-align: center;
+}
+.user-info .stats_top {
+	font-weight: bold;
+}
+.user-info .stats_bottom {
+	font-weight: 300;
+}
+.user-info .social-media-bar.contact {
+	text-align: left;
+	padding: 13px;
+	padding-left: 20px;
+}
+.profiles-page .panel {
+	border-radius: 0px !important;
+}
+.profiles-page .panel-heading {
+	border-radius: 0px !important;
+}
+.profiles-page .panel-heading .panel-heading-title,
+.profiles-page .panel-heading .tootlip-link {
+	display: inline-block;
+}
+.profiles-page .panel-body {
+	word-break: break-all
+}
+
+.block {
+	display: block;
+}
+.contact > .block > a {
+	color: #34798D;
+}
+.contact > .block > i {
+	width: 14px;
+}
+
+.chart_title {
+	display: block;
+	text-align: center;
+}
+
+#niches_container .panel.panel-info > .panel-heading {
+	background-color: #A3E7F6 !important;
+	color: #36454f;
+}
+
+#world_map {
+	width: 100%;
+	height: 100%;
+}
+
+.button_row {
+	background-color: white;
+	width: 100%;
+	height: 60px;
+	display: block;
+	margin-bottom: 20px;
+	padding: 3px;
+	border-radius: 5px;
+	border: 1px solid #D3D3D3;
+}
+
+.card-1 {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+#niches_container .panel.panel-info h4 {
+	font-size: 13px !important;
+}
+
+.user-bio-price {
+
+	padding: 5px;
+	font-size: 14px;
+	color: #36454f;
+	margin: 10px;
+}
+
+.social-media-bar {
+	text-align: center !important;
+}
+
+.left-col {
+	float: right;
+}
+.right-col {
+	float: left;
+}
+
+@media screen and (max-width: 768px) {
+	.left-col,
+	.right-col {
+		float: left;
+		padding-left: 50px;
+	}
+
+}
+
+h4.subtitle {
+	font-size: 1.2em;
+}
+
+.right-row {
+	float: right;
+}
+
+#backBtn {
+	margin-left: 5px
+}
+
+@media screen and (max-width: 768px) {
+	.right-row {
+		float: none;
+	}
+	.button_row {
+		height: 100%;
+	}
+	.full-width .btn {
+		width: 100%;
+	}
+	#backBtn {
+		width: 100%;
+		margin-left: 0px;
+		background-color: transparent;
+	}
+}
+.charts-col {
+	margin-top: 5px;
+}
+
+.inline {
+	display: inline-block !important;
+}
+.inline + h4 {
+	display: inline-block;
+}
+
+#followers_trend_chart .c3-bar {
+	fill: rgb(113, 104, 227) !important;
+}
+#followers_trend_chart .c3-tooltip-name--followers span {
+	background-color: #7168E3 !important;
+}
+
+#topPanelContainer,
+#middlePanelContainer,
+#bottomPanelContainer {
+	position: relative;
+	min-height: 35px;
+}
+#topPanelContainer .mssg,
+#middlePanelContainer .mssg,
+#bottomPanelContainer .mssg {
+	position: absolute;
+	font-style: italic;
+	font-size: 0.9em;
+	font-weight: 300;
+	text-align: center;
+	left: 45%;
+	top: 50%;
+	z-index: 99;
+}

@@ -1,0 +1,36 @@
+{% extends 'new/base.html' %}
+{% block title %}Create New Password{% endblock %}
+{% block content %}
+<div class="row">
+            <div class="col-md-4 col-md-offset-4">
+            {% if validlink %}
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Password Reset</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form role="form" method="post">
+                        {% csrf_token %}
+                            <fieldset>
+                                {% include 'new/form_inputs.html' %}
+                                <!-- Change this to a button or input when using this as a form -->
+                                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Reset my password"/>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <div class="login-panel panel panel-danger">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Password Reset - Error</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>The password reset link was invalid,possibly because it has already been used. Please request a new password reset.</p>
+                        <a href="{% url 'main:home' %}">Return to the home page</a>
+                    </div>
+                </div>
+
+            {% endif %}
+            </div>
+        </div>
+{% endblock %}

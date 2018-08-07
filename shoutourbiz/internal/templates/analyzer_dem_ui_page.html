@@ -1,0 +1,132 @@
+{% extends 'analyzer_base.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}Internal - Demographics Analyzer{% endblock %}
+{% block username %}{{ user }}{% endblock %}
+
+{% block page_content %}
+<div class="row bg-title">
+    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+        <h4 class="page-title">Demographics Analyzer</h4> </div>
+    <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+        <a href="{% url 'internal:logout' %}" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light">Logout</a>
+        <ol class="breadcrumb">
+            <li>Home</li>
+            <li>Internal</li>
+            <li class="active">Demographics Analyzer</li>
+        </ol>
+    </div>
+</div>
+<div class="row dem_analyzer">
+    <div class="col-md-12">
+        <div class="white-box">
+            
+            <form method="POST" action="">
+                {% csrf_token %}
+                
+                {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" id="username" style="text-align:center;">
+                                {{ follower.FOLLOWER_USRNAME }}
+                                {% if follows_a_confirmed_influencer %}
+                                    <a href="#" data-toggle="tooltip" title="This user follows a verified influencer">
+                                        <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <div class="panel-body">
+                                <p>
+                                    Please click on the link below, which will open in a separate window or tab. Evaluate the profile that appears on the page and answer the following questions.
+                                </p>
+                                <p>
+                                    Alternatively, if the profile can be retrieved, the profile picture and bio will be shown on the right sidebar.
+                                </p>
+                                <div class="alert alert-warning">
+                                    <a class="waves-effect waves-light" href="https://www.instagram.com/{{ follower.FOLLOWER_USRNAME }}/" target="_blank" style="color: white;">https://www.instagram.com/{{ follower.FOLLOWER_USRNAME }}/</a>
+                                </div>
+
+                                <br/>
+
+                                <div class="panel panel-default" style="margin: 5px;">
+                                    <div class="form-group">
+                                        <i class="fa fa-venus-mars" aria-hidden="true"></i>&ensp;
+                                        <label for="email">Gender:</label>
+                                        <a href="#" data-toggle="tooltip" title="What gender is the person in the profile?"><i class="fa fa-question" aria-hidden="true"></i></a>
+                                        {% render_field form.gender class+="form-control" required="true" %}
+                                    </div>
+                                    <div class="form-group">
+                                        <i class="fa fa-users" aria-hidden="true"></i>&ensp;
+                                        <label for="pwd">Age group:</label>
+                                         <a href="#" data-toggle="tooltip" title="What age group does this person belong to?"><i class="fa fa-question" aria-hidden="true"></i></a>
+                                        {% render_field form.age_group class+="form-control" required="true" %}
+                                    </div>
+                                    <div class="form-group">
+                                        <i class="fa fa-globe" aria-hidden="true"></i>&ensp;
+                                        <label for="pwd">Country:</label>
+                                         <a href="#" data-toggle="tooltip" title="What is this person's country of origin?"><i class="fa fa-question" aria-hidden="true"></i></a>
+                                        {% render_field form.country class+="form-control" %}
+                                    </div>
+
+                                    <input type="hidden" name="follower_id" value="{{ follower.FOLLOWER_ID }}">
+
+                                    <button type="submit" class="btn btn-lg btn-success waves-effect waves-light btn-block">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                {{ follower.FOLLOWER_USRNAME }}
+                            </div>
+                            <div class="panel-body" id="profile-details-sidebar">
+                                <a class="waves-effect waves-light" href="https://www.instagram.com/{{ follower.FOLLOWER_USRNAME }}/" target="_blank" style="color: white;">
+                                    <img class="user_img" src="" style="width: 100%;"/>
+                                </a>
+                                <div class="row">
+                                    <div style="display: block;">
+                                        <h5>Biography:</h5>
+                                    </div>
+                                    <div class="container-fluid" style="padding: 10px;">
+                                        <div class="profile-bio"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+         </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block additional_scripts %}
+<script>
+var profile_pic_bio_url = "{% url 'internal:scrape_pic_and_bio' username=follower.FOLLOWER_USRNAME %}";
+var anon_profile_path = "{% static 'internal/plugins/images/users/assistant.png' %}";
+</script>
+<script src="{% static 'dem_analyzer.js' %}"></script>
+{% endblock %}
